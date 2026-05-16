@@ -40,3 +40,17 @@ Se eligió esta combinación por las siguientes razones:
 | Arquitectura de microservicios (un servicio por módulo: ventas, inventario, clientes…) | Requiere una infraestructura muy compleja: múltiples servicios corriendo en paralelo, comunicación entre ellos y una gestión de despliegue avanzada. |
 | Monolito sin patrón definido (toda la lógica mezclada en un solo archivo o clase) | Al manejar datos financieros delicados, la falta de estructura haría que un cambio en la pantalla de ventas pudiera romper accidentalmente el cálculo del corte de caja. Sin separación de responsabilidades el mantenimiento se vuelve peligroso y el código imposible de escalar. |
 
+---
+
+## Consecuencias
+
+**✅ Lo que gano:**
+ 
+- **Consecuencia técnica:** La separación en Modelos, Vistas y Controladores hace que cada módulo del sistema sea independiente. Puedo modificar la pantalla de inventario sin tocar la lógica de ventas, y agregar un nuevo reporte sin afectar los controladores existentes. Esto facilita el mantenimiento durante todo el desarrollo del proyecto.
+- **Consecuencia sobre el proceso:** Al trabajar con la plantilla MVC de ASP.NET Core en Visual Studio, el proyecto ya viene con una estructura de carpetas definida y el enrutamiento configurado. Esto me permite arrancar a desarrollar funcionalidades desde el primer día sin perder tiempo en configuración, algo importante dado que soy el único desarrollador y el tiempo es limitado.
+
+**⚠️ Lo que sacrifico o asumo:**
+ 
+- **Limitación técnica:** En MVC con Razor, cada acción del usuario genera una petición al servidor y recarga la página con la respuesta. Esto significa que si en el futuro se quisiera agregar funcionalidades más interactivas —como actualizar el stock en tiempo real mientras se registra una venta— sería necesario incorporar JavaScript adicional o migrar partes del sistema a una arquitectura diferente.
+- **Deuda o riesgo:** Al tener todo el sistema dentro de un único proyecto ASP.NET Core, si el negocio crece considerablemente y el número de usuarios o de operaciones aumenta mucho, escalar implicaría pagar por un servidor más grande en lugar de poder distribuir la carga por módulos de forma independiente. Además, si en el futuro se quisiera ofrecer una app móvil, habría que refactorizar el backend para convertirlo en una Web API separada.
+
