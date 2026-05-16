@@ -1,0 +1,1 @@
+# Local Manager - Proyecto Arquitectura de Software
