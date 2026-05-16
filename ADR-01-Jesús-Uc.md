@@ -54,3 +54,6 @@ Se eligió esta combinación por las siguientes razones:
 - **Limitación técnica:** En MVC con Razor, cada acción del usuario genera una petición al servidor y recarga la página con la respuesta. Esto significa que si en el futuro se quisiera agregar funcionalidades más interactivas —como actualizar el stock en tiempo real mientras se registra una venta— sería necesario incorporar JavaScript adicional o migrar partes del sistema a una arquitectura diferente.
 - **Deuda o riesgo:** Al tener todo el sistema dentro de un único proyecto ASP.NET Core, si el negocio crece considerablemente y el número de usuarios o de operaciones aumenta mucho, escalar implicaría pagar por un servidor más grande en lugar de poder distribuir la carga por módulos de forma independiente. Además, si en el futuro se quisiera ofrecer una app móvil, habría que refactorizar el backend para convertirlo en una Web API separada.
 
+## Diagrama
+
+<img width="1771" height="733" alt="image" src="https://github.com/user-attachments/assets/d46c9b81-0643-4f00-95bb-f4e0dd095a96" />
