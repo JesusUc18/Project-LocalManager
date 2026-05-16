@@ -31,3 +31,12 @@ Se eligió esta combinación por las siguientes razones:
 - **ASP.NET Core:** Provee una infraestructura completa para construir aplicaciones web con C# sin necesidad de configurar herramientas adicionales. La plantilla MVC de Visual Studio ya incluye el enrutamiento, la gestión de peticiones HTTP y el sistema de vistas con Razor, lo que reduce el tiempo de configuración inicial y permite enfocarse directamente en la lógica del negocio.
 - **Entity Framework Core:** Simplifica enormemente el acceso a la base de datos al permitir trabajar con las entidades del sistema (Producto, Venta, Cliente, etc.) directamente como objetos de C#, sin escribir SQL manual para cada operación. Esto agiliza el desarrollo de los módulos CRUD que forman la base del sistema.
 - **SQL Server:** Al tratarse de un sistema con datos financieros y relaciones complejas entre tablas, una base de datos relacional con soporte a transacciones es la opción más adecuada. Garantiza que operaciones como registrar una venta y descontar el stock ocurran de forma completa o no ocurran, evitando inconsistencias que podrían afectar al negocio.
+
+### Alternativas consideradas
+
+| Alternativa | Por qué la descarté |
+|-------------|---------------------|
+| Separar frontend y backend (React + Web API) | Implicaría gestionar dos proyectos totalmente independientes y dominar JavaScript, el manejo de estados en el navegador y configuraciones de seguridad como CORS y tokens. Para mi, siendo un desarrollador unipersonal con tres meses de plazo, esto duplica el tiempo de desarrollo sin aportar una ventaja real en esta etapa del proyecto. |
+| Arquitectura de microservicios (un servicio por módulo: ventas, inventario, clientes…) | Requiere una infraestructura muy compleja: múltiples servicios corriendo en paralelo, comunicación entre ellos y una gestión de despliegue avanzada. |
+| Monolito sin patrón definido (toda la lógica mezclada en un solo archivo o clase) | Al manejar datos financieros delicados, la falta de estructura haría que un cambio en la pantalla de ventas pudiera romper accidentalmente el cálculo del corte de caja. Sin separación de responsabilidades el mantenimiento se vuelve peligroso y el código imposible de escalar. |
+
