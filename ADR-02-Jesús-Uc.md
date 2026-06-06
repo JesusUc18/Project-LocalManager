@@ -85,3 +85,18 @@ Define la infraestructura física del sistema. Mapea cómo el usuario accede por
 ## Diagrama
 
 <img width="1771" height="733" alt="image" src="https://github.com/user-attachments/assets/d46c9b81-0643-4f00-95bb-f4e0dd095a96" />
+
+
+---
+
+## 🤖 Uso de Inteligencia Artificial
+
+Este documento fue redactado de forma personal. Sin embargo, se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
+
+| Área de uso | Descripción |
+|-------------|-------------|
+| **Selección de base de datos** | Se consultó IA para contrastar las características de SQL Server frente a otras opciones relacionales, con el fin de validar que la elección fuera coherente con los requerimientos del sistema. La decisión final fue tomada por el autor. |
+| **Corrección de sintaxis Markdown** | Se empleó IA para revisar y corregir la sintaxis del documento en formato Markdown, garantizando que el formato de tablas, encabezados y bloques de código se renderice correctamente. |
+| **Optimización de diagramas** | Se usó IA como apoyo para estructurar y mejorar la presentación visual de las vistas arquitectónicas, asegurando que reflejaran con claridad la arquitectura descrita. |
+
+> **Nota:** El análisis de contexto, la toma de decisiones arquitectónicas, la redacción del razonamiento y la definición de consecuencias son de autoría propia, la IA no generó ningún contenido de fondo de este ADR de forma autónoma.
