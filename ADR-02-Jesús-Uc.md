@@ -1,10 +1,10 @@
-# ADR-01: Estructura base del sistema
+# ADR-02: Actualización con Vistas Arquitectónicas
 
 | Campo  | Valor |
 |--------|-------|
 | Autor  | Jesús Uc |
-| Fecha  | 15/05/2026 |
-| Estado | `Propuesto` |
+| Fecha  | 05/06/2026 |
+| Estado | `APROBADO` |
 
 ---
 
@@ -53,6 +53,34 @@ Se eligió esta combinación por las siguientes razones:
  
 - **Limitación técnica:** En MVC con Razor, cada acción del usuario genera una petición al servidor y recarga la página con la respuesta. Esto significa que si en el futuro se quisiera agregar funcionalidades más interactivas —como actualizar el stock en tiempo real mientras se registra una venta— sería necesario incorporar JavaScript adicional o migrar partes del sistema a una arquitectura diferente.
 - **Deuda o riesgo:** Al tener todo el sistema dentro de un único proyecto ASP.NET Core, si el negocio crece considerablemente y el número de usuarios o de operaciones aumenta mucho, escalar implicaría pagar por un servidor más grande en lugar de poder distribuir la carga por módulos de forma independiente. Además, si en el futuro se quisiera ofrecer una app móvil, habría que refactorizar el backend para convertirlo en una Web API separada.
+
+
+## Vistas Arquitectónicas
+
+### Vista de Lógica
+
+Muestra los módulos funcionales del negocio (Ventas, Inventario, Clientes, Caja y Reportes). Define qué hace el sistema y cómo se organiza conceptualmente para cumplir con los requerimientos del usuario.
+
+<img width="1614" height="560" alt="image" src="https://github.com/user-attachments/assets/ff9ec7b5-169f-4dcb-b6fb-a7d0a83250e9" />
+
+### Vista de Desarrollo
+
+Organiza el código fuente dentro de la solución (LocalManager.sln). Estructura el proyecto bajo el patrón MVC en carpetas físicas (Controllers, Models, Views, Data), facilitando el mantenimiento y la gestión del desarrollo.
+
+<img width="1614" height="486" alt="image" src="https://github.com/user-attachments/assets/120a967a-3bf5-475c-b900-2e145b421d9f" />
+
+### Vista de Procesos
+
+Detalla el flujo dinámico del sistema en tiempo de ejecución. Muestra el ciclo de vida de una petición: desde el estímulo HTTP del usuario, la consulta a la base de datos vía EF Core, hasta la respuesta renderizada en la vista Razor.
+
+<img width="1438" height="482" alt="image" src="https://github.com/user-attachments/assets/32e5ab5e-4fa5-4694-a390-ee84e5d50780" />
+
+### Vista de Despliegue
+
+Define la infraestructura física del sistema. Mapea cómo el usuario accede por navegador (HTTP) a un Servidor Windows que aloja la aplicación en ASP.NET Core, la cual se conecta directamente al motor de SQL Server.
+
+<img width="1443" height="486" alt="image" src="https://github.com/user-attachments/assets/7fe3fe34-0a52-4088-a2ba-67397c8bbb9c" />
+
 
 ## Diagrama
 
