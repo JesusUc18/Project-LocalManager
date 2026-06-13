@@ -74,7 +74,12 @@ La solución `LocalManager.sln` se organiza en cuatro proyectos:
 - Sigue siendo un **monolito de despliegue** (un solo proceso, un solo servidor): la escalabilidad horizontal por módulo independiente sigue sin estar disponible, tal como se reconoció en el ADR-02. Esta decisión no resuelve ese punto, solo prepara mejor el terreno para una futura migración si fuera necesaria.
 
 ---
+## Diagrama de la arquitectura
 
+<img width="692" height="793" alt="image" src="https://github.com/user-attachments/assets/292ceade-2a8d-423f-ac1a-26b987a646cc" />
+
+
+---
 ## Cláusula de Inteligencia Artificial
  
 Este documento fue redactado de forma personal. Se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
