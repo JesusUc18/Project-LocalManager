@@ -55,3 +55,20 @@ La solución `LocalManager.sln` se organiza en cuatro proyectos:
 | **Arquitectura hexagonal completa (Ports & Adapters con múltiples adaptadores)** | Comparte la idea de aislar el dominio, pero típicamente implica más capas de abstracción (puertos de entrada y salida explícitos, múltiples adaptadores intercambiables) de las que el proyecto necesita en 3 meses. La arquitectura en capas con inversión de dependencias logra el mismo aislamiento del dominio con menos artefactos. |
 | **Event-driven (basado en eventos/mensajería)** | El flujo del negocio (venta → descuento de stock → registro en caja) requiere consistencia inmediata y transaccional, no consistencia eventual. Introducir un bus de eventos agregaría infraestructura y complejidad de depuración no justificada. |
 | **Serverless (funciones)** | No es adecuado para un sistema con estado transaccional fuerte (control de caja por turno, inventario); requeriría rediseñar el acceso a datos para operar sin estado, y la infraestructura de funciones no aporta ventaja para un sistema de uso interno de un negocio local. |
+
+---
+
+## Consecuencias
+ 
+**✅ Lo que gano:**
+ 
+- Separación clara y verificable por el compilador entre lógica de negocio (`Domain`/`Application`), acceso a datos (`Infrastructure`) y presentación (`Presentation`).
+- La lógica de negocio crítica (ventas, inventario, caja) queda centralizada en `Application`, evitando duplicación de reglas en distintos Controllers.
+- Mayor facilidad para escribir pruebas unitarias de las reglas de negocio sin depender de SQL Server.
+- Camino más corto hacia una futura Web API: `Domain` y `Application` se reutilizan sin cambios.
+
+**⚠️ Lo que sacrifico o asumo:**
+ 
+- Mayor número de proyectos y archivos en la solución (4 en lugar de 1), lo que implica un poco más de configuración inicial (referencias entre proyectos, inyección de dependencias en `Program.cs`).
+- Curva de aprendizaje adicional respecto a dónde colocar cada clase (Domain vs Application vs Infrastructure), que se mitigará documentando convenciones claras desde el inicio del proyecto.
+- Sigue siendo un **monolito de despliegue** (un solo proceso, un solo servidor): la escalabilidad horizontal por módulo independiente sigue sin estar disponible, tal como se reconoció en el ADR-02. Esta decisión no resuelve ese punto, solo prepara mejor el terreno para una futura migración si fuera necesaria.
