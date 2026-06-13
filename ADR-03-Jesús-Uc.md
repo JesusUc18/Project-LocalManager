@@ -72,3 +72,17 @@ La solución `LocalManager.sln` se organiza en cuatro proyectos:
 - Mayor número de proyectos y archivos en la solución (4 en lugar de 1), lo que implica un poco más de configuración inicial (referencias entre proyectos, inyección de dependencias en `Program.cs`).
 - Curva de aprendizaje adicional respecto a dónde colocar cada clase (Domain vs Application vs Infrastructure), que se mitigará documentando convenciones claras desde el inicio del proyecto.
 - Sigue siendo un **monolito de despliegue** (un solo proceso, un solo servidor): la escalabilidad horizontal por módulo independiente sigue sin estar disponible, tal como se reconoció en el ADR-02. Esta decisión no resuelve ese punto, solo prepara mejor el terreno para una futura migración si fuera necesaria.
+
+---
+
+## Cláusula de Inteligencia Artificial
+ 
+Este documento fue redactado de forma personal. Se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
+ 
+| Área de uso | Descripción |
+|-------------|-------------|
+| **Comparación de estilos arquitectónicos** | Se consultó IA para contrastar la arquitectura en capas/Clean Architecture frente a otras alternativas (hexagonal, microservicios, event-driven, serverless), con el fin de validar que la elección fuera coherente con las restricciones del proyecto. La decisión final fue tomada por el autor (por mi, Jesús Uc). |
+| **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas y bloques de código. |
+ 
+> **Nota:** El análisis de contexto, la justificación de la decisión arquitectónica y la definición de consecuencias son de autoría propia. La IA no generó contenido extra al ya mencionado de este ADR.
+ 
