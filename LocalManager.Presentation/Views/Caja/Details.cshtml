@@ -1,0 +1,40 @@
+@model LocalManager.Domain.Entities.Caja
+@{
+    ViewData["Title"] = "Detalle de Caja";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span><i class="bi bi-cash-stack me-2"></i>Caja #@Model.Id</span>
+                <span class="badge @(Model.Estado == "Abierta" ? "bg-success" : "bg-secondary")">@Model.Estado</span>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Apertura</dt><dd class="col-sm-8">@Model.FechaApertura.ToString("dd/MM/yyyy HH:mm")</dd>
+                    <dt class="col-sm-4">Cierre</dt><dd class="col-sm-8">@(Model.FechaCierre?.ToString("dd/MM/yyyy HH:mm") ?? "—")</dd>
+                    <dt class="col-sm-4">Responsable</dt><dd class="col-sm-8">@(Model.Responsable ?? "—")</dd>
+                    <dt class="col-sm-4">Monto Inicial</dt><dd class="col-sm-8">$@Model.MontoInicial.ToString("N2")</dd>
+                    <dt class="col-sm-4">Monto Cierre</dt><dd class="col-sm-8">@(Model.MontoCierre?.ToString("N2") ?? "—")</dd>
+                    <dt class="col-sm-4">Total Ventas</dt><dd class="col-sm-8"><strong>$@Model.TotalVentas.ToString("N2")</strong></dd>
+                </dl>
+                @if (Model.Ventas.Any())
+                {
+                    <hr />
+                    <h6>Ventas registradas (@Model.Ventas.Count)</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead><tr><th>Folio</th><th>Fecha</th><th>Total</th></tr></thead>
+                            <tbody>
+                                @foreach (var v in Model.Ventas)
+                                {<tr><td>#@v.Id</td><td>@v.Fecha.ToString("dd/MM/yyyy HH:mm")</td><td>$@v.Total.ToString("N2")</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                <a href="/Caja" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+            </div>
+        </div>
+    </div>
+</div>

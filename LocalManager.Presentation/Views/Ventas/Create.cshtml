@@ -1,0 +1,95 @@
+@model LocalManager.Presentation.ViewModels.VentaViewModel
+@{
+    ViewData["Title"] = "Nueva Venta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-cart-plus me-2"></i>Registrar Nueva Venta</div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" id="ventaForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Venta.ClienteId" class="form-label"></label>
+                            <select asp-for="Venta.ClienteId" asp-items="Model.Clientes" class="form-select">
+                                <option value="">Cliente general</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Venta.CajaId" class="form-label"></label>
+                            <select asp-for="Venta.CajaId" asp-items="Model.CajasAbiertas" class="form-select" required>
+                                <option value="">-- Selecciona una caja --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Venta.MetodoPago" class="form-label"></label>
+                        <select asp-for="Venta.MetodoPago" asp-items="Model.MetodosPago" class="form-select"></select>
+                    </div>
+
+                    <hr />
+                    <h6 class="mb-3"><i class="bi bi-box-seam me-2"></i>Productos</h6>
+
+                    <div id="productosContainer">
+                        <div class="row producto-row mb-2">
+                            <div class="col-md-8">
+                                <select name="productoIds" class="form-select" required>
+                                    <option value="">-- Selecciona un producto --</option>
+                                    @foreach (var p in Model.Productos)
+                                    {
+                                        <option value="@p.Value">@p.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="cantidades" class="form-control" min="1" value="1" required placeholder="Cantidad" />
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-row"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="addProducto">
+                        <i class="bi bi-plus-lg me-1"></i>Agregar otro producto
+                    </button>
+
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="/Ventas" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-check-lg me-1"></i>Registrar Venta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('addProducto').addEventListener('click', function() {
+            var container = document.getElementById('productosContainer');
+            var row = document.querySelector('.producto-row').cloneNode(true);
+            row.querySelector('select').value = '';
+            row.querySelector('input').value = '1';
+            container.appendChild(row);
+            bindRemoveButtons();
+        });
+
+        function bindRemoveButtons() {
+            document.querySelectorAll('.remove-row').forEach(btn => {
+                btn.onclick = function() {
+                    if (document.querySelectorAll('.producto-row').length > 1) {
+                        this.closest('.producto-row').remove();
+                    }
+                };
+            });
+        }
+        bindRemoveButtons();
+    </script>
+}

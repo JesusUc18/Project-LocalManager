@@ -1,0 +1,112 @@
+@{
+    ViewData["Title"] = "Reportes";
+    var ventasHoy = ViewBag.VentasHoy as List<LocalManager.Domain.Entities.Venta>;
+    var ventasMes = ViewBag.VentasMes as List<LocalManager.Domain.Entities.Venta>;
+    var productosBajos = ViewBag.ProductosBajosStock as List<LocalManager.Domain.Entities.Producto>;
+    var cajas = ViewBag.Cajas as List<LocalManager.Domain.Entities.Caja>;
+}
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-calendar-day me-2"></i>Ventas de Hoy</div>
+            <div class="card-body">
+                @if (ventasHoy.Any())
+                {
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Total ventas: <strong>@ventasHoy.Count</strong></span>
+                        <span class="text-muted">Monto: <strong>$@ventasHoy.Sum(v => v.Total).ToString("N2")</strong></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead><tr><th>Folio</th><th>Hora</th><th>Total</th></tr></thead>
+                            <tbody>
+                                @foreach (var v in ventasHoy)
+                                {<tr><td>#@v.Id</td><td>@v.Fecha.ToString("HH:mm")</td><td>$@v.Total.ToString("N2")</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {<p class="text-muted text-center py-3">No hay ventas hoy.</p>}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-calendar-month me-2"></i>Ventas del Mes</div>
+            <div class="card-body">
+                @if (ventasMes.Any())
+                {
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Total ventas: <strong>@ventasMes.Count</strong></span>
+                        <span class="text-muted">Monto: <strong>$@ventasMes.Sum(v => v.Total).ToString("N2")</strong></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead><tr><th>Folio</th><th>Fecha</th><th>Total</th></tr></thead>
+                            <tbody>
+                                @foreach (var v in ventasMes)
+                                {<tr><td>#@v.Id</td><td>@v.Fecha.ToString("dd/MM")</td><td>$@v.Total.ToString("N2")</td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {<p class="text-muted text-center py-3">No hay ventas este mes.</p>}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-md-6">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark"><i class="bi bi-exclamation-triangle me-2"></i>Productos con Stock Bajo (&lt;5)</div>
+            <div class="card-body p-0">
+                @if (productosBajos.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead><tr><th>Producto</th><th>Stock</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in productosBajos)
+                                {<tr><td>@p.Nombre</td><td><span class="badge bg-danger">@p.Stock</span></td></tr>}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {<p class="text-muted text-center py-3 mb-0">¡Todo bien! No hay productos con stock bajo.</p>}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-cash-stack me-2"></i>Resumen de Cajas</div>
+            <div class="card-body p-0">
+                @if (cajas.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead><tr><th>Caja</th><th>Estado</th><th>Ventas</th><th>Total</th></tr></thead>
+                            <tbody>
+                                @foreach (var c in cajas)
+                                {
+                                    <tr>
+                                        <td>#@c.Id</td>
+                                        <td><span class="badge @(c.Estado == "Abierta" ? "bg-success" : "bg-secondary")">@c.Estado</span></td>
+                                        <td>@c.Ventas.Count</td>
+                                        <td>$@c.TotalVentas.ToString("N2")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {<p class="text-muted text-center py-3 mb-0">No hay cajas registradas.</p>}
+            </div>
+        </div>
+    </div>
+</div>

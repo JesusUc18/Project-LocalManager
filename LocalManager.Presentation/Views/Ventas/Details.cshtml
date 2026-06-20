@@ -1,0 +1,43 @@
+@model LocalManager.Domain.Entities.Venta
+@{
+    ViewData["Title"] = "Detalle de Venta";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span><i class="bi bi-receipt me-2"></i>Venta #@Model.Id</span>
+                <span class="badge bg-primary">@Model.MetodoPago</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-6"><strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy HH:mm")</div>
+                    <div class="col-6"><strong>Cliente:</strong> @(Model.Cliente?.Nombre ?? "Cliente general")</div>
+                </div>
+                <hr />
+                <table class="table table-sm">
+                    <thead><tr><th>Producto</th><th class="text-center">Cant.</th><th class="text-end">Precio</th><th class="text-end">Subtotal</th></tr></thead>
+                    <tbody>
+                        @foreach (var d in Model.Detalles)
+                        {
+                            <tr>
+                                <td>@d.Producto?.Nombre</td>
+                                <td class="text-center">@d.Cantidad</td>
+                                <td class="text-end">$@d.PrecioUnitario.ToString("N2")</td>
+                                <td class="text-end">$@d.Subtotal.ToString("N2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-primary">
+                            <td colspan="3" class="text-end"><strong>TOTAL</strong></td>
+                            <td class="text-end"><strong>$@Model.Total.ToString("N2")</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <a href="/Ventas" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+            </div>
+        </div>
+    </div>
+</div>

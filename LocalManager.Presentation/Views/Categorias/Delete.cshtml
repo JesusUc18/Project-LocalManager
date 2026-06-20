@@ -1,0 +1,23 @@
+@model LocalManager.Domain.Entities.Categoria
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white"><i class="bi bi-trash me-2"></i>Eliminar Categoría</div>
+            <div class="card-body">
+                <h5>¿Eliminar "@Model.Nombre"?</h5>
+                <p class="text-muted">Los productos asociados perderán su categoría.</p>
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Eliminar</button>
+                        <a href="/Categorias" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
