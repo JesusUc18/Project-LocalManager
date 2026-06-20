@@ -1,0 +1,15 @@
+.vs/
+*.user
+*.suo
+*.userosscache
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+packages/
+*.nupkg
+*.cache
+*.log
+*.pdb
+*.tmp
+TestResults/
