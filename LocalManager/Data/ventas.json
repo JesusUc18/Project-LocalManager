@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "Fecha": "2026-06-19T20:08:07.692063-06:00",
+    "ClienteId": null,
+    "ClienteNombre": null,
+    "Detalles": [
+      {
+        "Id": 0,
+        "VentaId": 0,
+        "ProductoId": 1,
+        "ProductoNombre": "",
+        "Cantidad": 4,
+        "PrecioUnitario": 0,
+        "Subtotal": 0
+      }
+    ],
+    "Total": 0,
+    "MetodoPago": "Efectivo",
+    "CajaId": 1
+  },
+  {
+    "Id": 2,
+    "Fecha": "2026-06-19T20:12:12.3495335-06:00",
+    "ClienteId": null,
+    "ClienteNombre": null,
+    "Detalles": [
+      {
+        "Id": 0,
+        "VentaId": 0,
+        "ProductoId": 1,
+        "ProductoNombre": "",
+        "Cantidad": 2,
+        "PrecioUnitario": 0,
+        "Subtotal": 0
+      }
+    ],
+    "Total": 0,
+    "MetodoPago": "Tarjeta",
+    "CajaId": 1
+  }
+]

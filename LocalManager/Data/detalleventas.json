@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 1,
+    "VentaId": 1,
+    "ProductoId": 1,
+    "ProductoNombre": "Mantecadas Chocolate",
+    "Cantidad": 4,
+    "PrecioUnitario": 40,
+    "Subtotal": 160
+  },
+  {
+    "Id": 2,
+    "VentaId": 2,
+    "ProductoId": 1,
+    "ProductoNombre": "Mantecadas Chocolate",
+    "Cantidad": 2,
+    "PrecioUnitario": 40,
+    "Subtotal": 80
+  }
+]
