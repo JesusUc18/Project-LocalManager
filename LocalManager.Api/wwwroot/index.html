@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Manager API - Tester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏪 Local Manager API</h1>
+            <p>Tester interactivo para probar todos los endpoints REST</p>
+            <div class="base-url">
+                <label>Base URL:</label>
+                <input type="text" id="baseUrl" value="https://localhost:5002" />
+            </div>
+        </header>
+
+        <!-- ==================== PRODUCTOS ==================== -->
+        <section class="endpoint-group">
+            <h2>📦 Productos</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/productos</div>
+                <button onclick="callApi('GET', '/api/productos')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/productos/{id}</div>
+                <input type="number" id="prodId" placeholder="ID" />
+                <button onclick="callApi('GET', '/api/productos/' + document.getElementById('prodId').value)">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/productos</div>
+                <textarea id="prodBody" placeholder='{"nombre":"Coca Cola 600ml","precio":18.50,"stock":100,"categoriaId":1}'></textarea>
+                <button onclick="callApi('POST', '/api/productos', document.getElementById('prodBody').value)">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method put">PUT</div>
+                <div class="path">/api/productos/{id}</div>
+                <input type="number" id="prodPutId" placeholder="ID" />
+                <textarea id="prodPutBody" placeholder='{"nombre":"Coca Cola 600ml","precio":20.00,"stock":95,"categoriaId":1}'></textarea>
+                <button onclick="callApi('PUT', '/api/productos/' + document.getElementById('prodPutId').value, document.getElementById('prodPutBody').value)">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method delete">DELETE</div>
+                <div class="path">/api/productos/{id}</div>
+                <input type="number" id="prodDelId" placeholder="ID" />
+                <button onclick="callApi('DELETE', '/api/productos/' + document.getElementById('prodDelId').value)">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== CATEGORÍAS ==================== -->
+        <section class="endpoint-group">
+            <h2>🏷️ Categorías</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/categorias</div>
+                <button onclick="callApi('GET', '/api/categorias')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/categorias</div>
+                <textarea id="catBody" placeholder='{"nombre":"Bebidas","descripcion":"Refrescos y jugos"}'></textarea>
+                <button onclick="callApi('POST', '/api/categorias', document.getElementById('catBody').value)">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== CLIENTES ==================== -->
+        <section class="endpoint-group">
+            <h2>👥 Clientes</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/clientes</div>
+                <button onclick="callApi('GET', '/api/clientes')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/clientes</div>
+                <textarea id="cliBody" placeholder='{"nombre":"Juan Pérez","telefono":"9991234567","email":"juan@email.com"}'></textarea>
+                <button onclick="callApi('POST', '/api/clientes', document.getElementById('cliBody').value)">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== CAJA ==================== -->
+        <section class="endpoint-group">
+            <h2>💰 Caja</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/caja</div>
+                <button onclick="callApi('GET', '/api/caja')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/caja/abiertas</div>
+                <button onclick="callApi('GET', '/api/caja/abiertas')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/caja/abrir</div>
+                <textarea id="cajaBody" placeholder='{"montoInicial":500.00,"responsable":"Jesús Uc"}'></textarea>
+                <button onclick="callApi('POST', '/api/caja/abrir', document.getElementById('cajaBody').value)">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/caja/{id}/cerrar</div>
+                <input type="number" id="cajaCerrarId" placeholder="ID de caja" />
+                <textarea id="cajaCerrarBody" placeholder='{"montoCierre":750.50}'></textarea>
+                <button onclick="callApi('POST', '/api/caja/' + document.getElementById('cajaCerrarId').value + '/cerrar', document.getElementById('cajaCerrarBody').value)">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== VENTAS ==================== -->
+        <section class="endpoint-group">
+            <h2>🛒 Ventas</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/ventas</div>
+                <button onclick="callApi('GET', '/api/ventas')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <div class="path">/api/ventas</div>
+                <textarea id="ventaBody" placeholder='{"clienteId":1,"cajaId":1,"metodoPago":"Efectivo","detalles":[{"productoId":1,"cantidad":2}]}'></textarea>
+                <button onclick="callApi('POST', '/api/ventas', document.getElementById('ventaBody').value)">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== REPORTES ==================== -->
+        <section class="endpoint-group">
+            <h2>📊 Reportes</h2>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/reportes/dashboard</div>
+                <button onclick="callApi('GET', '/api/reportes/dashboard')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/reportes/ventas-hoy</div>
+                <button onclick="callApi('GET', '/api/reportes/ventas-hoy')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/reportes/stock-bajo</div>
+                <button onclick="callApi('GET', '/api/reportes/stock-bajo')">Probar</button>
+            </div>
+
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <div class="path">/api/reportes/resumen-cajas</div>
+                <button onclick="callApi('GET', '/api/reportes/resumen-cajas')">Probar</button>
+            </div>
+        </section>
+
+        <!-- ==================== RESPUESTA ==================== -->
+        <section class="response-section">
+            <h2>📡 Respuesta</h2>
+            <div id="status" class="status">Esperando petición...</div>
+            <pre id="output" class="output"></pre>
+        </section>
+    </div>
+
+    <script>
+        async function callApi(method, path, body = null) {
+            const baseUrl = document.getElementById('baseUrl').value.trim();
+            const url = baseUrl + path;
+            const statusEl = document.getElementById('status');
+            const outputEl = document.getElementById('output');
+
+            statusEl.textContent = '⏳ Cargando...';
+            statusEl.className = 'status loading';
+            outputEl.textContent = '';
+
+            try {
+                const options = {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (body) options.body = body;
+
+                const response = await fetch(url, options);
+                const data = await response.json().catch(() => null);
+
+                statusEl.textContent = `${response.status} ${response.statusText}`;
+                statusEl.className = `status ${response.ok ? 'success' : 'error'}`;
+                outputEl.textContent = data ? JSON.stringify(data, null, 2) : '(Sin cuerpo de respuesta)';
+            } catch (err) {
+                statusEl.textContent = 'Error de red';
+                statusEl.className = 'status error';
+                outputEl.textContent = err.message + '\n\nAsegúrate de que la API esté corriendo en ' + baseUrl;
+            }
+        }
+    </script>
+</body>
+</html>

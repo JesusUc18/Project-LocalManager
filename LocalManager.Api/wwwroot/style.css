@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 2px solid #e0e6ed;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+.base-url {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.base-url label {
+    font-weight: 600;
+    color: #555;
+}
+
+.base-url input {
+    padding: 8px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    width: 260px;
+    transition: border-color 0.2s;
+}
+
+.base-url input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Secciones */
+.endpoint-group {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.endpoint-group h2 {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+/* Endpoint row */
+.endpoint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+
+.endpoint:last-child {
+    border-bottom: none;
+}
+
+.method {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.method.get { background: #27ae60; }
+.method.post { background: #3498db; }
+.method.put { background: #f39c12; }
+.method.delete { background: #e74c3c; }
+
+.path {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    color: #34495e;
+    flex: 1;
+    min-width: 180px;
+}
+
+.endpoint input[type="number"] {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 70px;
+    font-size: 0.85rem;
+}
+
+.endpoint textarea {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-family: 'Consolas', monospace;
+    width: 100%;
+    min-width: 250px;
+    height: 60px;
+    resize: vertical;
+}
+
+.endpoint input:focus,
+.endpoint textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.endpoint button {
+    padding: 8px 18px;
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.endpoint button:hover {
+    background: #2980b9;
+}
+
+/* Response section */
+.response-section {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    position: sticky;
+    bottom: 20px;
+}
+
+.response-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.status {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.status.loading {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.output {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 120px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .endpoint {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .endpoint textarea {
+        width: 100%;
+    }
+    .base-url {
+        flex-direction: column;
+    }
+}
