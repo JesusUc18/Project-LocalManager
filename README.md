@@ -193,5 +193,17 @@ Abre `https://localhost:5001`
 
 `APROBADO` — Arquitectura en capas lista para desarrollo iterativo y escalabilidad futura.
 
+---
+
+## Cláusula de Inteligencia Artificial
+ 
+Este documento fue redactado de forma personal. Se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
+ 
+| Área de uso | Descripción |
+|-------------|-------------|
+| **Comparación de estilos arquitectónicos** | Se consultó IA para contrastar la arquitectura en capas/Clean Architecture frente a otras alternativas (hexagonal, microservicios, event-driven, serverless), con el fin de validar que la elección fuera coherente con las restricciones del proyecto. La decisión final fue tomada por el autor (por mi, Jesús Uc). |
+| **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas y bloques de código. |
+ 
+> **Nota:** El análisis de contexto, la justificación de la decisión arquitectónica y la definición de consecuencias son de autoría propia. La IA no generó contenido extra al ya mencionado de este ADR.
 
 **ESTE README ES TEMPORAL**
