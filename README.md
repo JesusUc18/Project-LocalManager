@@ -195,4 +195,18 @@ Las ventas implementan el principio **ACID**:
 
 `APROBADO` — MVC + API REST + Swagger funcionando. Listo para desarrollo iterativo y consumo por múltiples clientes.
 
+---
+
+## Uso de Inteligencia Artificial
+
+Este documento fue redactado de forma personal. Se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
+
+| Área de uso | Descripción |
+|-------------|-------------|
+| **Comparación de tecnologías API** | Se consultó IA para contrastar REST vs gRPC vs GraphQL, validando que REST fuera la opción más adecuada para el contexto del proyecto (universalidad, facilidad de consumo, estándar de la industria). La decisión final fue tomada por el autor. |
+| **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas, listas y bloques de código. |
+| **Estructuración del diagrama** | Se usó IA como apoyo para organizar la representación visual de la arquitectura con los 5 proyectos y el flujo de dependencias. |
+
+> **Nota:** El análisis de contexto, la justificación de la decisión arquitectónica, la definición de endpoints, la evaluación de alternativas y la definición de consecuencias son de autoría propia. La IA no generó contenido de fondo de este ADR de forma autónoma.
+
 **ESTE README ES TEMPORAL**
