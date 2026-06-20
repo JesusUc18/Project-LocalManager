@@ -49,6 +49,30 @@ Infrastructure ←──┘
 
 ---
 
+## Capturas de Pantalla
+
+PRINCIPAL:
+<img width="1472" height="637" alt="image" src="https://github.com/user-attachments/assets/7bdbc941-1e64-4845-9cbc-26196b790245" />
+
+CAJA-API:
+<img width="1448" height="330" alt="image" src="https://github.com/user-attachments/assets/45e0fa97-5748-48aa-b134-276bad4f6ce4" />
+
+CATEGORIAS-API:
+<img width="1469" height="325" alt="image" src="https://github.com/user-attachments/assets/1e84482b-862b-4f39-8ab4-4ffb31c34358" />
+
+CLIENTES-API:
+<img width="1450" height="331" alt="image" src="https://github.com/user-attachments/assets/916b5c30-9cba-4bf8-a08d-3c68e24eca31" />
+
+PRODUCTOS-API:
+<img width="1444" height="329" alt="image" src="https://github.com/user-attachments/assets/675c5411-9a5a-4e86-b72d-2219a17f9c5d" />
+
+REPORTES-API:
+<img width="1464" height="333" alt="image" src="https://github.com/user-attachments/assets/8c7ea733-0a7a-4f69-bafd-d71e771ef498" />
+
+VENTAS-API:
+<img width="1447" height="329" alt="image" src="https://github.com/user-attachments/assets/e42b057f-2aae-4422-bff2-161dfa0349a4" />
+
+---
 ## Tecnologías
 
 | Capa | Tecnología |
