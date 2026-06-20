@@ -21,7 +21,7 @@ using LocalManager.Infrastructure.Repositories;
 // 5. JsonDbContext → Archivos JSON (persistencia temporal)
 // =============================================================================
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ─── Servicios MVC ───
 builder.Services.AddControllersWithViews();
@@ -48,7 +48,7 @@ builder.Services.AddScoped<IVentaService, VentaService>();
 // builder.Services.AddDbContext<AppDbContext>(options =>
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
