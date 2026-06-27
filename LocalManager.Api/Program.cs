@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 
 // =============================================================================
 // ADR-04: Incorporación de API REST
+// ADR-05: Patrones GOF — Repository + Strategy
 // =============================================================================
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -37,11 +38,23 @@ builder.Services.AddSwaggerGen(options =>
         options.IncludeXmlComments(xmlPath);
 });
 
-// ─── CAPA INFRASTRUCTURE: Contexto de datos temporal ───
-builder.Services.AddSingleton<JsonDbContext>(provider =>
-    new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+// ─── PATRÓN STRATEGY: Selector de estrategia de persistencia ───
+bool usarJson = builder.Configuration.GetValue<bool>("UseJsonPersistence");
 
-// ─── CAPA INFRASTRUCTURE: Repositorios ───
+if (usarJson)
+{
+    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
+        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+}
+else
+{
+    // Descomentar cuando se implemente SqlDbContext:
+    // builder.Services.AddScoped<IDbContext, SqlDbContext>();
+    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
+        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+}
+
+// ─── PATRÓN REPOSITORY: Repositorios reciben IDbContext ───
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
@@ -68,7 +81,6 @@ builder.Services.AddCors(options =>
 
 WebApplication app = builder.Build();
 
-// ─── Middleware ───
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

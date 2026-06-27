@@ -6,19 +6,11 @@ using LocalManager.Infrastructure.Repositories;
 
 // =============================================================================
 // ADR-03: Arquitectura en Capas / Clean Architecture
+// ADR-05: Patrones GOF — Repository + Strategy
 // =============================================================================
-// Regla de Dependencia: Las dependencias apuntan hacia el centro (Domain)
-//
-//   Presentation → Application → Domain
-//        ↓            ↓
-//   Infrastructure ←──┘
-//
-// Flujo de una petición (Vista de Procesos ADR-02):
-// 1. HTTP → Controller (Presentation)
-// 2. Controller → IService (Application)
-// 3. Service → IRepository (Domain)
-// 4. Repository → JsonDbContext (Infrastructure)
-// 5. JsonDbContext → Archivos JSON (persistencia temporal)
+// PATRÓN STRATEGY: Program.cs es el selector de estrategia de persistencia.
+// Cambiar "UseJsonPersistence" en appsettings.json intercambia el motor de datos
+// sin modificar ningún repositorio, servicio ni controlador.
 // =============================================================================
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -26,27 +18,38 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // ─── Servicios MVC ───
 builder.Services.AddControllersWithViews();
 
-// ─── CAPA INFRASTRUCTURE: Contexto de datos temporal ───
-builder.Services.AddSingleton<JsonDbContext>(provider =>
-    new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+// ─── PATRÓN STRATEGY: Selector de estrategia de persistencia ───
+// true  → JsonDbContext  (desarrollo, sin SQL Server)
+// false → SqlDbContext   (producción, SQL Server con EF Core) [pendiente de implementar]
+bool usarJson = builder.Configuration.GetValue<bool>("UseJsonPersistence");
 
-// ─── CAPA INFRASTRUCTURE: Repositorios (implementan interfaces de Domain) ───
+if (usarJson)
+{
+    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
+        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+}
+else
+{
+    // Descomentar cuando se implemente SqlDbContext:
+    // builder.Services.AddScoped<IDbContext, SqlDbContext>();
+    // Por ahora, si UseJsonPersistence = false, cae en JSON como fallback
+    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
+        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+}
+
+// ─── PATRÓN REPOSITORY: Repositorios reciben IDbContext (no JsonDbContext) ───
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ICajaRepository, CajaRepository>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 
-// ─── CAPA APPLICATION: Servicios de negocio (dependen de interfaces de Domain) ───
+// ─── CAPA APPLICATION: Servicios de negocio ───
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<ICajaService, CajaService>();
 builder.Services.AddScoped<IVentaService, VentaService>();
-
-// ─── EF Core (preparado para SQL Server - descomentar cuando se migre) ───
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 WebApplication app = builder.Build();
 
