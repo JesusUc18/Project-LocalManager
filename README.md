@@ -1,8 +1,8 @@
-# Local Manager — Versión API REST
+# Local Manager — Sistema de Gestión para Negocios Locales
 
-> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Fecha:** 19/06/2026
+> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Fecha:** 26/06/2026
 
-Sistema de gestión de negocios locales con **Arquitectura en Capas + API REST**. Expone endpoints documentados con Swagger/OpenAPI para consumo por cualquier cliente: navegadores, apps móviles, integraciones.
+Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes.
 
 ---
 
@@ -13,27 +13,26 @@ LocalManager/
 ├── LocalManager.sln
 ├── LocalManager.Domain/              ← CENTRO (no depende de nadie)
 │   ├── Entities/                     → Categoria, Producto, Cliente, Venta, Caja
-│   └── Interfaces/Repositories/    → ICategoriaRepository, etc.
+│   └── Interfaces/Repositories/      → ICategoriaRepository, IProductoRepository, etc.
 │
 ├── LocalManager.Application/         ← Reglas de negocio (solo Domain)
 │   └── Services/                     → CategoriaService, ProductoService, VentaService, etc.
 │
 ├── LocalManager.Infrastructure/      ← Persistencia (solo Domain)
 │   ├── Data/
-│   │   ├── AppDbContext.cs         → EF Core preparado para SQL Server
-│   │   └── JsonDbContext.cs         → JSON temporal (actual)
-│   └── Repositories/                 → Implementaciones de repositorios
+│   │   ├── IDbContext.cs             → Interfaz Strategy (patrón GOF)
+│   │   ├── JsonDbContext.cs          → Estrategia JSON (actual)
+│   │   └── AppDbContext.cs           → Estrategia SQL Server (preparado)
+│   └── Repositories/                 → Implementaciones Repository (patrón GOF)
 │
-├── LocalManager.Presentation/          ← ASP.NET Core MVC (sin cambios)
+├── LocalManager.Presentation/        ← ASP.NET Core MVC
 │   ├── Controllers/
-│   └── Views/
+│   ├── Views/
+│   └── Data/                         → Archivos JSON compartidos (fuente única de datos)
 │
-└── LocalManager.Api/                 ← ASP.NET Core Web API + Swagger (NUEVO)
+└── LocalManager.Api/                 ← ASP.NET Core Web API + Swagger
     ├── Controllers/                  → ProductosApi, VentasApi, CajaApi, ReportesApi
-    ├── Models/                       → DTOs: ApiResponse, CrearVentaRequest
-    └── wwwroot/
-        ├── index.html                → Tester interactivo de la API
-        └── style.css                 → Estilos del tester
+    └── Models/                       → DTOs: ApiResponse, CrearVentaRequest
 ```
 
 ### Regla de Dependencia
@@ -49,41 +48,45 @@ Infrastructure ←──┘
 
 ---
 
-## Capturas de Pantalla
+## Patrones de Diseño GOF (ADR-05)
 
-PRINCIPAL:
-<img width="1472" height="637" alt="image" src="https://github.com/user-attachments/assets/7bdbc941-1e64-4845-9cbc-26196b790245" />
+### Repository (Estructural)
+Cada entidad tiene su interfaz de repositorio definida en `Domain` e implementada en `Infrastructure`. Los servicios de negocio nunca acceden directamente a los datos — solo conocen la interfaz.
 
-CAJA-API:
-<img width="1448" height="330" alt="image" src="https://github.com/user-attachments/assets/45e0fa97-5748-48aa-b134-276bad4f6ce4" />
+```
+Domain:         IProductoRepository, IVentaRepository, ICajaRepository...
+Infrastructure: ProductoRepository, VentaRepository, CajaRepository...
+Application:    VentaService(IVentaRepository, IProductoRepository) ← solo interfaces
+```
 
-CATEGORIAS-API:
-<img width="1469" height="325" alt="image" src="https://github.com/user-attachments/assets/1e84482b-862b-4f39-8ab4-4ffb31c34358" />
+### Strategy (Comportamiento)
+El mecanismo de persistencia es intercambiable sin modificar repositorios, servicios ni controladores. Se controla con una sola línea en `appsettings.json`:
 
-CLIENTES-API:
-<img width="1450" height="331" alt="image" src="https://github.com/user-attachments/assets/916b5c30-9cba-4bf8-a08d-3c68e24eca31" />
+```json
+"UseJsonPersistence": true   ← JSON (desarrollo)
+"UseJsonPersistence": false  ← SQL Server (producción)
+```
 
-PRODUCTOS-API:
-<img width="1444" height="329" alt="image" src="https://github.com/user-attachments/assets/675c5411-9a5a-4e86-b72d-2219a17f9c5d" />
+```
+IDbContext ←── JsonDbContext   (actual)
+IDbContext ←── SqlDbContext    (futuro)
+```
 
-REPORTES-API:
-<img width="1464" height="333" alt="image" src="https://github.com/user-attachments/assets/8c7ea733-0a7a-4f69-bafd-d71e771ef498" />
-
-VENTAS-API:
-<img width="1447" height="329" alt="image" src="https://github.com/user-attachments/assets/e42b057f-2aae-4422-bff2-161dfa0349a4" />
+Los repositorios reciben `IDbContext`, nunca la implementación concreta.
 
 ---
+
 ## Tecnologías
 
 | Capa | Tecnología |
 |------|-----------|
 | Framework | ASP.NET Core 8 |
-| Patrón | MVC + Clean Architecture + REST |
+| Patrón arquitectónico | MVC + Clean Architecture |
+| Patrones de diseño | Repository (GOF Estructural) + Strategy (GOF Comportamiento) |
 | Base de datos | JSON (temporal) / SQL Server (preparado) |
 | ORM | Entity Framework Core 8 (preparado) |
 | Documentación API | Swagger / OpenAPI 3.0 |
 | Frontend MVC | Razor + Bootstrap 5 |
-| Frontend API | HTML + CSS + JavaScript vanilla (tester) |
 
 ---
 
@@ -92,8 +95,7 @@ VENTAS-API:
 ### Swagger UI
 
 ```
-https://localhost:5002/          ← Swagger UI en raíz (modo desarrollo)
-https://localhost:5002/swagger   ← Alternativa
+https://localhost:5002/        ← Swagger UI (modo desarrollo)
 ```
 
 ### Endpoints
@@ -131,10 +133,6 @@ https://localhost:5002/swagger   ← Alternativa
 | | `/api/reportes/stock-bajo` | GET | Productos con stock < 5 |
 | | `/api/reportes/resumen-cajas` | GET | Resumen de cajas |
 
-### Tester Interactivo
-
-Abre `https://localhost:5002/index.html` para probar todos los endpoints desde una interfaz web sin necesidad de Postman.
-
 ---
 
 ## Ejecución
@@ -151,7 +149,6 @@ dotnet run --project LocalManager.Presentation
 # Ejecutar API
 dotnet run --project LocalManager.Api
 # Abre https://localhost:5002 (Swagger UI)
-# O https://localhost:5002/index.html (Tester interactivo)
 ```
 
 ---
@@ -161,7 +158,7 @@ dotnet run --project LocalManager.Api
 Las ventas implementan el principio **ACID**:
 
 1. **Validación** — Se verifica stock suficiente para todos los productos
-2. **Ejecución** — Todo en memoria (venta, detalles, descuento de stock)
+2. **Ejecución** — Venta, detalles y descuento de stock en una sola operación
 3. **Persistencia** — Todo se guarda de forma atómica
 4. **Rollback** — Si algo falla, nada se persiste
 
@@ -169,19 +166,35 @@ Las ventas implementan el principio **ACID**:
 
 ## Migración a SQL Server
 
-1. Descomentar en `Program.cs` de Presentation y Api:
-   ```csharp
-   builder.Services.AddDbContext<AppDbContext>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+1. Cambiar en `appsettings.json` de Presentation y Api:
+   ```json
+   "UseJsonPersistence": false
    ```
 
-2. Ejecutar:
+2. Descomentar en `Program.cs`:
+   ```csharp
+   builder.Services.AddScoped<IDbContext, SqlDbContext>();
+   ```
+
+3. Ejecutar migraciones:
    ```bash
    dotnet ef migrations add InitialCreate
    dotnet ef database update
    ```
 
-3. **Domain y Application no cambian** — la regla de dependencia se respeta.
+4. **Domain y Application no cambian** — la regla de dependencia se respeta.
+
+---
+
+## ADRs
+
+| ADR | Decisión | Estado |
+|-----|----------|--------|
+| ADR-01 | Estructura base: ASP.NET Core MVC + EF Core + SQL Server | `APROBADO` |
+| ADR-02 | Vistas arquitectónicas: Lógica, Desarrollo, Procesos y Despliegue | `APROBADO` |
+| ADR-03 | Estilo arquitectónico: Clean Architecture en capas | `APROBADO` |
+| ADR-04 | Incorporación de API REST con Swagger | `APROBADO` |
+| ADR-05 | Patrones GOF: Repository (Estructural) + Strategy (Comportamiento) | `APROBADO` |
 
 ---
 
@@ -191,22 +204,14 @@ Las ventas implementan el principio **ACID**:
 
 ---
 
-## Estado
-
-`APROBADO` — MVC + API REST + Swagger funcionando. Listo para desarrollo iterativo y consumo por múltiples clientes.
-
----
-
 ## Uso de Inteligencia Artificial
 
 Este documento fue redactado de forma personal. Se utilizó inteligencia artificial como herramienta de apoyo en los siguientes aspectos específicos:
 
 | Área de uso | Descripción |
 |-------------|-------------|
-| **Comparación de tecnologías API** | Se consultó IA para contrastar REST vs gRPC vs GraphQL, validando que REST fuera la opción más adecuada para el contexto del proyecto (universalidad, facilidad de consumo, estándar de la industria). La decisión final fue tomada por el autor. |
+| **Comparación de tecnologías y patrones** | Se consultó IA para contrastar alternativas arquitectónicas y de patrones GOF, validando que las decisiones fueran coherentes con las restricciones del proyecto. La decisión final fue tomada por el autor. |
 | **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas, listas y bloques de código. |
-| **Estructuración del diagrama** | Se usó IA como apoyo para organizar la representación visual de la arquitectura con los 5 proyectos y el flujo de dependencias. |
+| **Estructuración de diagramas** | Se usó IA como apoyo para organizar la representación visual de la arquitectura. |
 
-> **Nota:** El análisis de contexto, la justificación de la decisión arquitectónica, la definición de endpoints, la evaluación de alternativas y la definición de consecuencias son de autoría propia. La IA no generó contenido de fondo de este ADR de forma autónoma.
-
-**ESTE README ES TEMPORAL**
+> **Nota:** El análisis de contexto, la toma de decisiones arquitectónicas y la redacción del razonamiento son de autoría propia. La IA no generó contenido de fondo de este README de forma autónoma.
