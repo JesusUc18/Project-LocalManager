@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "fechaApertura": "2026-06-20T08:00:00",
+    "fechaCierre":   "2026-06-20T20:00:00",
+    "montoInicial":  500.00,
+    "montoCierre":   2340.50,
+    "estado":        "Cerrada",
+    "responsable":   "Jesús Uc",
+    "ventas":        []
+  },
+  {
+    "id": 2,
+    "fechaApertura": "2026-06-23T08:00:00",
+    "fechaCierre":   "2026-06-23T21:00:00",
+    "montoInicial":  500.00,
+    "montoCierre":   3105.00,
+    "estado":        "Cerrada",
+    "responsable":   "Jesús Uc",
+    "ventas":        []
+  },
+  {
+    "id": 3,
+    "fechaApertura": "2026-06-25T08:00:00",
+    "fechaCierre":   "2026-06-25T20:30:00",
+    "montoInicial":  500.00,
+    "montoCierre":   1875.00,
+    "estado":        "Cerrada",
+    "responsable":   "Jesús Uc",
+    "ventas":        []
+  },
+  {
+    "id": 4,
+    "fechaApertura": "2026-06-26T08:00:00",
+    "fechaCierre":   null,
+    "montoInicial":  500.00,
+    "montoCierre":   null,
+    "estado":        "Abierta",
+    "responsable":   "Jesús Uc",
+    "ventas":        []
+  }
+]

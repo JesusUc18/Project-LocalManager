@@ -1,0 +1,10 @@
+[
+  { "id": 1, "nombre": "María González",    "telefono": "9991234501", "email": "maria.gonzalez@gmail.com",  "direccion": "Calle 20 #145, Col. Centro",        "fechaRegistro": "2026-01-10T09:00:00" },
+  { "id": 2, "nombre": "Carlos Pérez",      "telefono": "9991234502", "email": "carlos.perez@hotmail.com",  "direccion": "Av. Reforma #32, Col. Jardines",    "fechaRegistro": "2026-01-15T10:30:00" },
+  { "id": 3, "nombre": "Ana Martínez",      "telefono": "9991234503", "email": "ana.martinez@gmail.com",    "direccion": "Calle 18 #67, Col. Pensiones",      "fechaRegistro": "2026-02-03T11:00:00" },
+  { "id": 4, "nombre": "Luis Hernández",    "telefono": "9991234504", "email": null,                        "direccion": "Calle 60 #200, Col. Itzimná",       "fechaRegistro": "2026-02-14T08:45:00" },
+  { "id": 5, "nombre": "Rosa Díaz",         "telefono": "9991234505", "email": "rosa.diaz@yahoo.com",       "direccion": "Av. Colón #89, Col. García Ginerés","fechaRegistro": "2026-03-01T09:15:00" },
+  { "id": 6, "nombre": "Juan Torres",       "telefono": "9991234506", "email": null,                        "direccion": "Calle 47 #310, Col. Sambula",       "fechaRegistro": "2026-03-20T14:00:00" },
+  { "id": 7, "nombre": "Sofía Ramírez",     "telefono": "9991234507", "email": "sofia.ramirez@gmail.com",   "direccion": "Calle 12 #55, Col. México",         "fechaRegistro": "2026-04-05T10:00:00" },
+  { "id": 8, "nombre": "Pedro Castillo",    "telefono": "9991234508", "email": "pedro.castillo@outlook.com","direccion": "Av. Itzaes #120, Col. Centro",      "fechaRegistro": "2026-04-18T16:30:00" }
+]

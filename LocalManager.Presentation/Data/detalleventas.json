@@ -1,0 +1,74 @@
+[
+  { "id": 1,  "ventaId": 1,  "productoId": 6,  "cantidad": 2, "precioUnitario": 18.00 },
+  { "id": 2,  "ventaId": 1,  "productoId": 13, "cantidad": 1, "precioUnitario": 17.00 },
+  { "id": 3,  "ventaId": 1,  "productoId": 10, "cantidad": 2, "precioUnitario": 26.00 },
+
+  { "id": 4,  "ventaId": 2,  "productoId": 1,  "cantidad": 2, "precioUnitario": 22.50 },
+  { "id": 5,  "ventaId": 2,  "productoId": 5,  "cantidad": 1, "precioUnitario": 14.50 },
+  { "id": 6,  "ventaId": 2,  "productoId": 8,  "cantidad": 3, "precioUnitario": 16.00 },
+
+  { "id": 7,  "ventaId": 3,  "productoId": 16, "cantidad": 1, "precioUnitario": 74.00 },
+  { "id": 8,  "ventaId": 3,  "productoId": 17, "cantidad": 2, "precioUnitario": 22.00 },
+  { "id": 9,  "ventaId": 3,  "productoId": 18, "cantidad": 1, "precioUnitario": 18.00 },
+
+  { "id": 10, "ventaId": 4,  "productoId": 7,  "cantidad": 1, "precioUnitario": 38.00 },
+  { "id": 11, "ventaId": 4,  "productoId": 14, "cantidad": 2, "precioUnitario": 19.00 },
+
+  { "id": 12, "ventaId": 5,  "productoId": 3,  "cantidad": 1, "precioUnitario": 48.00 },
+  { "id": 13, "ventaId": 5,  "productoId": 4,  "cantidad": 2, "precioUnitario": 26.00 },
+  { "id": 14, "ventaId": 5,  "productoId": 6,  "cantidad": 3, "precioUnitario": 18.00 },
+
+  { "id": 15, "ventaId": 6,  "productoId": 2,  "cantidad": 2, "precioUnitario": 28.00 },
+  { "id": 16, "ventaId": 6,  "productoId": 10, "cantidad": 3, "precioUnitario": 26.00 },
+  { "id": 17, "ventaId": 6,  "productoId": 19, "cantidad": 1, "precioUnitario": 58.00 },
+
+  { "id": 18, "ventaId": 7,  "productoId": 6,  "cantidad": 4, "precioUnitario": 18.00 },
+  { "id": 19, "ventaId": 7,  "productoId": 8,  "cantidad": 2, "precioUnitario": 16.00 },
+
+  { "id": 20, "ventaId": 8,  "productoId": 11, "cantidad": 1, "precioUnitario": 52.00 },
+  { "id": 21, "ventaId": 8,  "productoId": 12, "cantidad": 1, "precioUnitario": 68.00 },
+  { "id": 22, "ventaId": 8,  "productoId": 10, "cantidad": 2, "precioUnitario": 26.00 },
+
+  { "id": 23, "ventaId": 9,  "productoId": 13, "cantidad": 3, "precioUnitario": 17.00 },
+  { "id": 24, "ventaId": 9,  "productoId": 14, "cantidad": 2, "precioUnitario": 19.00 },
+  { "id": 25, "ventaId": 9,  "productoId": 15, "cantidad": 1, "precioUnitario": 28.00 },
+
+  { "id": 26, "ventaId": 10, "productoId": 1,  "cantidad": 3, "precioUnitario": 22.50 },
+  { "id": 27, "ventaId": 10, "productoId": 4,  "cantidad": 2, "precioUnitario": 26.00 },
+  { "id": 28, "ventaId": 10, "productoId": 9,  "cantidad": 2, "precioUnitario": 32.00 },
+
+  { "id": 29, "ventaId": 11, "productoId": 3,  "cantidad": 2, "precioUnitario": 48.00 },
+  { "id": 30, "ventaId": 11, "productoId": 5,  "cantidad": 3, "precioUnitario": 14.50 },
+
+  { "id": 31, "ventaId": 12, "productoId": 6,  "cantidad": 2, "precioUnitario": 18.00 },
+  { "id": 32, "ventaId": 12, "productoId": 7,  "cantidad": 1, "precioUnitario": 38.00 },
+  { "id": 33, "ventaId": 12, "productoId": 20, "cantidad": 2, "precioUnitario": 24.00 },
+
+  { "id": 34, "ventaId": 13, "productoId": 16, "cantidad": 2, "precioUnitario": 74.00 },
+  { "id": 35, "ventaId": 13, "productoId": 18, "cantidad": 3, "precioUnitario": 18.00 },
+
+  { "id": 36, "ventaId": 14, "productoId": 2,  "cantidad": 1, "precioUnitario": 28.00 },
+  { "id": 37, "ventaId": 14, "productoId": 10, "cantidad": 2, "precioUnitario": 26.00 },
+  { "id": 38, "ventaId": 14, "productoId": 13, "cantidad": 4, "precioUnitario": 17.00 },
+
+  { "id": 39, "ventaId": 15, "productoId": 11, "cantidad": 1, "precioUnitario": 52.00 },
+  { "id": 40, "ventaId": 15, "productoId": 19, "cantidad": 1, "precioUnitario": 58.00 },
+
+  { "id": 41, "ventaId": 16, "productoId": 6,  "cantidad": 3, "precioUnitario": 18.00 },
+  { "id": 42, "ventaId": 16, "productoId": 14, "cantidad": 2, "precioUnitario": 19.00 },
+  { "id": 43, "ventaId": 16, "productoId": 8,  "cantidad": 2, "precioUnitario": 16.00 },
+
+  { "id": 44, "ventaId": 17, "productoId": 1,  "cantidad": 2, "precioUnitario": 22.50 },
+  { "id": 45, "ventaId": 17, "productoId": 5,  "cantidad": 1, "precioUnitario": 14.50 },
+
+  { "id": 46, "ventaId": 18, "productoId": 3,  "cantidad": 1, "precioUnitario": 48.00 },
+  { "id": 47, "ventaId": 18, "productoId": 12, "cantidad": 1, "precioUnitario": 68.00 },
+  { "id": 48, "ventaId": 18, "productoId": 9,  "cantidad": 1, "precioUnitario": 32.00 },
+
+  { "id": 49, "ventaId": 19, "productoId": 4,  "cantidad": 3, "precioUnitario": 26.00 },
+  { "id": 50, "ventaId": 19, "productoId": 7,  "cantidad": 1, "precioUnitario": 38.00 },
+
+  { "id": 51, "ventaId": 20, "productoId": 15, "cantidad": 2, "precioUnitario": 28.00 },
+  { "id": 52, "ventaId": 20, "productoId": 17, "cantidad": 1, "precioUnitario": 22.00 },
+  { "id": 53, "ventaId": 20, "productoId": 20, "cantidad": 3, "precioUnitario": 24.00 }
+]

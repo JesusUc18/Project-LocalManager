@@ -1,0 +1,8 @@
+[
+  { "id": 1, "nombre": "Abarrotes", "descripcion": "Productos básicos de despensa y consumo diario" },
+  { "id": 2, "nombre": "Bebidas", "descripcion": "Refrescos, jugos, aguas y bebidas en general" },
+  { "id": 3, "nombre": "Lácteos", "descripcion": "Leche, queso, yogurt y derivados lácteos" },
+  { "id": 4, "nombre": "Botanas", "descripcion": "Papas, frituras, cacahuates y botanas en general" },
+  { "id": 5, "nombre": "Limpieza", "descripcion": "Productos de limpieza del hogar y personal" },
+  { "id": 6, "nombre": "Panadería", "descripcion": "Pan, pasteles, galletas y productos de panadería" }
+]

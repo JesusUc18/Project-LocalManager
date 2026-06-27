@@ -1,0 +1,22 @@
+[
+  { "id": 1,  "nombre": "Arroz Morelos 1kg",       "descripcion": "Arroz blanco grano largo",          "precio": 22.50, "stock": 80,  "categoriaId": 1, "codigoBarras": "7501000001001", "activo": true },
+  { "id": 2,  "nombre": "Frijol negro 1kg",         "descripcion": "Frijol negro de primera calidad",   "precio": 28.00, "stock": 65,  "categoriaId": 1, "codigoBarras": "7501000001002", "activo": true },
+  { "id": 3,  "nombre": "Aceite Nutrioli 1L",       "descripcion": "Aceite vegetal de girasol",         "precio": 48.00, "stock": 40,  "categoriaId": 1, "codigoBarras": "7501000001003", "activo": true },
+  { "id": 4,  "nombre": "Azúcar estándar 1kg",      "descripcion": "Azúcar blanca refinada",            "precio": 26.00, "stock": 55,  "categoriaId": 1, "codigoBarras": "7501000001004", "activo": true },
+  { "id": 5,  "nombre": "Sal La Fina 1kg",          "descripcion": "Sal de mesa yodatada",              "precio": 14.50, "stock": 70,  "categoriaId": 1, "codigoBarras": "7501000001005", "activo": true },
+  { "id": 6,  "nombre": "Coca-Cola 600ml",          "descripcion": "Refresco de cola 600ml",            "precio": 18.00, "stock": 120, "categoriaId": 2, "codigoBarras": "7501000002001", "activo": true },
+  { "id": 7,  "nombre": "Coca-Cola 2L",             "descripcion": "Refresco de cola 2 litros",         "precio": 38.00, "stock": 60,  "categoriaId": 2, "codigoBarras": "7501000002002", "activo": true },
+  { "id": 8,  "nombre": "Agua Ciel 1.5L",           "descripcion": "Agua purificada 1.5 litros",        "precio": 16.00, "stock": 90,  "categoriaId": 2, "codigoBarras": "7501000002003", "activo": true },
+  { "id": 9,  "nombre": "Jugo Del Valle 1L",        "descripcion": "Jugo de naranja natural",           "precio": 32.00, "stock": 45,  "categoriaId": 2, "codigoBarras": "7501000002004", "activo": true },
+  { "id": 10, "nombre": "Leche Lala 1L",            "descripcion": "Leche entera pasteurizada",         "precio": 26.00, "stock": 50,  "categoriaId": 3, "codigoBarras": "7501000003001", "activo": true },
+  { "id": 11, "nombre": "Yogurt Activia 1kg",       "descripcion": "Yogurt natural con probióticos",    "precio": 52.00, "stock": 30,  "categoriaId": 3, "codigoBarras": "7501000003002", "activo": true },
+  { "id": 12, "nombre": "Queso Oaxaca 400g",        "descripcion": "Queso oaxaca para quesadillas",     "precio": 68.00, "stock": 25,  "categoriaId": 3, "codigoBarras": "7501000003003", "activo": true },
+  { "id": 13, "nombre": "Papas Sabritas 45g",       "descripcion": "Papas fritas sabor natural",        "precio": 17.00, "stock": 100, "categoriaId": 4, "codigoBarras": "7501000004001", "activo": true },
+  { "id": 14, "nombre": "Doritos Nacho 65g",        "descripcion": "Frituras de maíz sabor nacho",      "precio": 19.00, "stock": 85,  "categoriaId": 4, "codigoBarras": "7501000004002", "activo": true },
+  { "id": 15, "nombre": "Cacahuates Mafer 180g",    "descripcion": "Cacahuates japoneses",              "precio": 28.00, "stock": 60,  "categoriaId": 4, "codigoBarras": "7501000004003", "activo": true },
+  { "id": 16, "nombre": "Detergente Ariel 1kg",     "descripcion": "Detergente en polvo para ropa",     "precio": 74.00, "stock": 35,  "categoriaId": 5, "codigoBarras": "7501000005001", "activo": true },
+  { "id": 17, "nombre": "Jabón Zote 400g",          "descripcion": "Jabón de lavandería rosa",          "precio": 22.00, "stock": 50,  "categoriaId": 5, "codigoBarras": "7501000005002", "activo": true },
+  { "id": 18, "nombre": "Cloro Cloralex 1L",        "descripcion": "Cloro líquido desinfectante",       "precio": 18.00, "stock": 40,  "categoriaId": 5, "codigoBarras": "7501000005003", "activo": true },
+  { "id": 19, "nombre": "Pan Bimbo Grande",         "descripcion": "Pan de caja blanco grande 680g",    "precio": 58.00, "stock": 8,   "categoriaId": 6, "codigoBarras": "7501000006001", "activo": true },
+  { "id": 20, "nombre": "Galletas Marías Gamesa",   "descripcion": "Galletas de vainilla clásicas",     "precio": 24.00, "stock": 6,   "categoriaId": 6, "codigoBarras": "7501000006002", "activo": true }
+]
