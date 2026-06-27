@@ -1,7 +1,7 @@
 @{
     ViewData["Title"] = "Reportes";
     var ventasHoy = ViewBag.VentasHoy as List<LocalManager.Domain.Entities.Venta>;
-    var ventasMes = ViewBag.VentasMes as List<LocalManager.Domain.Entities.Venta>;
+    var ventasMes = ViewBag.VentasMes as List<Dictionary<string, object>>;
     var productosBajos = ViewBag.ProductosBajosStock as List<LocalManager.Domain.Entities.Producto>;
     var cajas = ViewBag.Cajas as List<LocalManager.Domain.Entities.Caja>;
 }
@@ -36,24 +36,32 @@
         <div class="card">
             <div class="card-header"><i class="bi bi-calendar-month me-2"></i>Ventas del Mes</div>
             <div class="card-body">
-                @if (ventasMes.Any())
+                @if (ventasMes != null && ventasMes.Any())
                 {
                     <div class="d-flex justify-content-between mb-3">
-                        <span class="text-muted">Total ventas: <strong>@ventasMes.Count</strong></span>
-                        <span class="text-muted">Monto: <strong>$@ventasMes.Sum(v => v.Total).ToString("N2")</strong></span>
+                        <span class="text-muted">Días con ventas: <strong>@ventasMes.Count</strong></span>
+                        <span class="text-muted">Monto: <strong>$@ventasMes.Sum(d => (decimal)d["Monto"]).ToString("N2")</strong></span>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-sm">
-                            <thead><tr><th>Folio</th><th>Fecha</th><th>Total</th></tr></thead>
+                            <thead><tr><th>Día</th><th>Ventas</th><th>Total del día</th></tr></thead>
                             <tbody>
-                                @foreach (var v in ventasMes)
-                                {<tr><td>#@v.Id</td><td>@v.Fecha.ToString("dd/MM")</td><td>$@v.Total.ToString("N2")</td></tr>}
+                                @foreach (var dia in ventasMes)
+                                {
+                                    <tr>
+                                        <td>@(((DateTime)dia["Dia"]).ToString("dd 'de' MMMM", new System.Globalization.CultureInfo("es-MX")))</td>
+                                        <td><span class="badge bg-secondary">@dia["Cantidad"]</span></td>
+                                        <td>$@(((decimal)dia["Monto"]).ToString("N2"))</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 }
                 else
-                {<p class="text-muted text-center py-3">No hay ventas este mes.</p>}
+                {
+                    <p class="text-muted text-center py-3">No hay ventas este mes.</p>
+                }
             </div>
         </div>
     </div>
