@@ -5,14 +5,15 @@ using LocalManager.Infrastructure.Data;
 namespace LocalManager.Infrastructure.Repositories
 {
     /// <summary>
-    /// Implementación del repositorio de categorías usando JSON.
-    /// CAPA: Infrastructure — implementa la interfaz definida en Domain.
+    /// PATRÓN REPOSITORY (GOF - Estructural) — ADR-05
+    /// CAMBIO: recibe IDbContext en lugar de JsonDbContext.
+    /// CAPA: Infrastructure.
     /// </summary>
     public class CategoriaRepository : ICategoriaRepository
     {
-        private readonly JsonDbContext _context;
+        private readonly IDbContext _context;
 
-        public CategoriaRepository(JsonDbContext context)
+        public CategoriaRepository(IDbContext context)
         {
             _context = context;
         }

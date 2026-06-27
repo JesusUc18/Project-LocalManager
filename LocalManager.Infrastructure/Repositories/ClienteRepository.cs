@@ -5,14 +5,15 @@ using LocalManager.Infrastructure.Data;
 namespace LocalManager.Infrastructure.Repositories
 {
     /// <summary>
-    /// Implementación del repositorio de clientes usando JSON.
-    /// CAPA: Infrastructure — implementa la interfaz definida en Domain.
+    /// PATRÓN REPOSITORY (GOF - Estructural) — ADR-05
+    /// CAMBIO: recibe IDbContext en lugar de JsonDbContext.
+    /// CAPA: Infrastructure.
     /// </summary>
     public class ClienteRepository : IClienteRepository
     {
-        private readonly JsonDbContext _context;
+        private readonly IDbContext _context;
 
-        public ClienteRepository(JsonDbContext context)
+        public ClienteRepository(IDbContext context)
         {
             _context = context;
         }

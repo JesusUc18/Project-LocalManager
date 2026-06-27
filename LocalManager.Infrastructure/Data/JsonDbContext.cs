@@ -5,14 +5,13 @@ using LocalManager.Domain.Entities;
 namespace LocalManager.Infrastructure.Data
 {
     /// <summary>
-    /// Contexto de datos temporal basado en archivos JSON.
-    /// VISTA DE DESARROLLO (ADR-02): Capa Infrastructure → Implementación de persistencia
-    /// VISTA DE DESPLIEGUE (ADR-02): Persistencia temporal en archivos JSON (reemplazar por SQL Server)
+    /// PATRÓN STRATEGY (GOF - Comportamiento) — ADR-05
+    /// Estrategia concreta: persistencia en archivos JSON.
+    /// Implementa IDbContext para ser intercambiable con SqlDbContext.
     /// 
-    /// Simula el comportamiento de un DbContext de EF Core con Set&lt;T&gt;(), Add(), SaveChanges().
     /// CAPA: Infrastructure — implementa la persistencia, depende de Domain (entidades).
     /// </summary>
-    public class JsonDbContext
+    public class JsonDbContext : IDbContext
     {
         private readonly string _dataPath;
         private readonly object _lock = new();
