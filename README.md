@@ -6,6 +6,21 @@ Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF 
 
 ---
 
+## Arquitectura C4 (Contexto, Contenedores, Componentes)
+
+La documentación completa de arquitectura del sistema, versionada como código (Mermaid), está en [`/Diagramas`](./Diagramas):
+
+| Nivel | Archivo | Descripción |
+|-------|---------|-------------|
+| C1 — Contexto | [`DiagramaC1-LocalManager.md`](./Diagramas/DiagramaC1-LocalManager.md) | Quién usa LocalManager y para qué |
+| C2 — Contenedores | [`DiagramaC2-LocalManager.md`](./Diagramas/DiagramaC2-LocalManager.md) | Los 5 proyectos de la solución y cómo se comunican |
+| C3 — Componentes | [`DiagramaC3-LM-Domain.md`](./Diagramas/DiagramaC3-LM-Domain.md) | Entidades e interfaces de `LocalManager.Domain` |
+| C3 — Componentes | [`DiagramaC3-LM-Application.md`](./Diagramas/DiagramaC3-LM-Application.md) | Servicios de negocio de `LocalManager.Application` |
+| C3 — Componentes | [`DiagramaC3-LM-Infrastructure.md`](./Diagramas/DiagramaC3-LM-Infrastructure.md) | Repositorios y estrategia de persistencia de `LocalManager.Infrastructure` |
+| C3 — Componentes | [`DiagramaC3-LM-Presentation.md`](./Diagramas/DiagramaC3-LM-Presentation.md) | Controllers/Views MVC de `LocalManager.Presentation` |
+| C3 — Componentes | [`DiagramaC3-LM-Api.md`](./Diagramas/DiagramaC3-LM-Api.md) | Controllers REST de `LocalManager.Api` |
+
+---
 ## Arquitectura (5 Proyectos)
 
 ```
