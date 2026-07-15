@@ -4,7 +4,7 @@
 |--------|-------|
 | Autor  | Jesús Uc |
 | Fecha  | 15/05/2026 |
-| Estado | `Propuesto` |
+| Estado | `Actualizado por el ADR-02` |
 
 ---
 
