@@ -1,6 +1,6 @@
 # Local Manager — Sistema de Gestión para Negocios Locales
 
-> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Fecha:** 26/06/2026
+> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Última actualización:** 15/07/2026
 
 Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes.
 
@@ -48,7 +48,7 @@ Infrastructure ←──┘
 
 ---
 
-## Patrones de Diseño GOF (ADR-05)
+## Patrones de Diseño GOF
 
 ### Repository (Estructural)
 Cada entidad tiene su interfaz de repositorio definida en `Domain` e implementada en `Infrastructure`. Los servicios de negocio nunca acceden directamente a los datos — solo conocen la interfaz.
@@ -73,6 +73,8 @@ IDbContext ←── SqlDbContext    (futuro)
 ```
 
 Los repositorios reciben `IDbContext`, nunca la implementación concreta.
+
+> ⚠️ **Deuda técnica conocida:** en `Program.cs` (Presentation y Api), las dos ramas del `if (usarJson)` registran actualmente `JsonDbContext` — la bandera `UseJsonPersistence` todavía no selecciona una estrategia distinta porque `SqlDbContext` no está implementado. Además, `LocalManager.Api/appsettings.json` apunta `JsonDatabase:DataPath` a una ruta absoluta de la máquina del autor en vez de una ruta relativa o variable de entorno. Ver **ADR-06** para el detalle y la propuesta de solución.
 
 ---
 
@@ -155,12 +157,14 @@ dotnet run --project LocalManager.Api
 
 ## Transacciones Atómicas
 
-Las ventas implementan el principio **ACID**:
+Las ventas siguen un flujo pensado para comportarse como el principio **ACID**:
 
 1. **Validación** — Se verifica stock suficiente para todos los productos
 2. **Ejecución** — Venta, detalles y descuento de stock en una sola operación
-3. **Persistencia** — Todo se guarda de forma atómica
-4. **Rollback** — Si algo falla, nada se persiste
+3. **Persistencia** — Cada paso se guarda a medida que ocurre
+4. **Rollback** — Si algo falla dentro del método, se revierte manualmente el stock ya descontado
+
+> ⚠️ **Deuda técnica conocida:** esta atomicidad es actualmente *simulada en memoria*, no una transacción real de base de datos — con `JsonDbContext`, cada operación escribe a disco de inmediato, por lo que una interrupción a mitad del proceso puede dejar los archivos JSON inconsistentes. El rollback manual no cubre ese caso. Ver **ADR-06** para el detalle y la propuesta de solución (Unit of Work / transacción real con `SqlDbContext`).
 
 ---
 
@@ -186,15 +190,29 @@ Las ventas implementan el principio **ACID**:
 
 ---
 
+## Deuda Técnica Conocida
+
+Siguiendo la misma disciplina de documentación del resto del proyecto, la deuda técnica identificada se registra formalmente en **ADR-06** en lugar de dejarse implícita en el código:
+
+| # | Deuda | Categoría | Estado |
+|---|-------|-----------|--------|
+| 1 | Ruta absoluta de máquina local en `appsettings.json` de `LocalManager.Api` + bandera `UseJsonPersistence` sin efecto real | Configuración / Infraestructura | Pendiente de pago |
+| 2 | "Transacción atómica" de `VentaService.Registrar` simulada en memoria, sin garantía real ante interrupciones (cada `SaveChanges()` escribe a disco de inmediato) | Lógica de negocio | Pendiente de pago |
+
+Ver el detalle completo (qué es, por qué existe, costo de no pagarla y propuesta de solución) en [`ADRs/ADR_06-Jesús-Uc.md`](./ADRs/ADR_06-Jesús-Uc.md).
+
+---
+
 ## ADRs
 
 | ADR | Decisión | Estado |
 |-----|----------|--------|
-| ADR-01 | Estructura base: ASP.NET Core MVC + EF Core + SQL Server | `APROBADO` |
-| ADR-02 | Vistas arquitectónicas: Lógica, Desarrollo, Procesos y Despliegue | `APROBADO` |
-| ADR-03 | Estilo arquitectónico: Clean Architecture en capas | `APROBADO` |
-| ADR-04 | Incorporación de API REST con Swagger | `APROBADO` |
-| ADR-05 | Patrones GOF: Repository (Estructural) + Strategy (Comportamiento) | `APROBADO` |
+| ADR-01 | Estructura base: ASP.NET Core MVC + EF Core + SQL Server | `Actualizado por el ADR-02` |
+| ADR-02 | Vistas arquitectónicas: Lógica, Desarrollo, Procesos y Despliegue | `Actualizado por el ADR-03` |
+| ADR-03 | Estilo arquitectónico: Clean Architecture en capas | `Actualizado por el ADR-04` |
+| ADR-04 | Incorporación de API REST con Swagger | `Actualizado por el ADR-05` |
+| ADR-05 | Patrones GOF: Repository (Estructural) + Strategy (Comportamiento) | `Actualizado por el ADR-06` |
+| ADR-06 | Deuda técnica identificada: configuración hardcodeada y falsa atomicidad en ventas | `APROBADO` |
 
 ---
 
@@ -213,5 +231,6 @@ Este documento fue redactado de forma personal. Se utilizó inteligencia artific
 | **Comparación de tecnologías y patrones** | Se consultó IA para contrastar alternativas arquitectónicas y de patrones GOF, validando que las decisiones fueran coherentes con las restricciones del proyecto. La decisión final fue tomada por el autor. |
 | **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas, listas y bloques de código. |
 | **Estructuración de diagramas** | Se usó IA como apoyo para organizar la representación visual de la arquitectura. |
+| **Actualización con deuda técnica (ADR-06)** | Se usó IA para redactar las notas de deuda técnica añadidas a este README y enlazarlas con el ADR-06, a partir de la inspección de código realizada previamente. |
 
 > **Nota:** El análisis de contexto, la toma de decisiones arquitectónicas y la redacción del razonamiento son de autoría propia. La IA no generó contenido de fondo de este README de forma autónoma.
