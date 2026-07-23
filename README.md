@@ -184,7 +184,7 @@ dotnet test LocalManager.xUnit/LocalManager.xUnit.csproj
 
 El pipeline `.github/workflows/ci.yml` ejecuta automáticamente `dotnet restore`, `dotnet build` y `dotnet test` sobre la solución en cada `push` y `pull request`, evitando que una regresión en estos controladores llegue a `main` sin ser detectada.
 
-Ver el razonamiento completo (por qué se eligieron estos controladores y qué queda pendiente de cubrir) en [`ADRs/ADR-07-Jesús-Uc.md`](./ADRs/ADR-07-Jesús-Uc.md).
+Ver el razonamiento completo (por qué se eligieron estos controladores y qué queda pendiente de cubrir) en [`ADRs/ADR-07-Jesús-Uc.md`](./ADRs/ADR_07-Jesús-Uc.md).
 
 ---
 
