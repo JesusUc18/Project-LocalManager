@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.12021.73 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalManager.Domain", "LocalManager.Domain\LocalManager.Domain.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1111111111}"
 EndProject
@@ -11,6 +11,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalManager.Presentation", "LocalManager.Presentation\LocalManager.Presentation.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF4444444444}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalManager.Api", "LocalManager.Api\LocalManager.Api.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF5555555555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalManager.xUnit", "LocalManager.xUnit\LocalManager.xUnit.csproj", "{42963D29-9213-4E3D-BCC5-A64CA8569FD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,5 +40,12 @@ Global
 		{A1B2C3D4-E5F6-7890-ABCD-EF5555555555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF5555555555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF5555555555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42963D29-9213-4E3D-BCC5-A64CA8569FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42963D29-9213-4E3D-BCC5-A64CA8569FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42963D29-9213-4E3D-BCC5-A64CA8569FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42963D29-9213-4E3D-BCC5-A64CA8569FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
