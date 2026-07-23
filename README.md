@@ -1,12 +1,12 @@
 # Local Manager — Sistema de Gestión para Negocios Locales
 
-> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Última actualización:** 15/07/2026
+> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Última actualización:** 22/07/2026
 
-Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes.
+Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes. Cuenta además con una suite de pruebas automatizadas con **xUnit** y un pipeline de **Integración Continua** en GitHub Actions.
 
 ---
 
-## Arquitectura (5 Proyectos)
+## Arquitectura (5 Proyectos + Pruebas)
 
 ```
 LocalManager/
@@ -30,9 +30,14 @@ LocalManager/
 │   ├── Views/
 │   └── Data/                         → Archivos JSON compartidos (fuente única de datos)
 │
-└── LocalManager.Api/                 ← ASP.NET Core Web API + Swagger
-    ├── Controllers/                  → ProductosApi, VentasApi, CajaApi, ReportesApi
-    └── Models/                       → DTOs: ApiResponse, CrearVentaRequest
+├── LocalManager.Api/                 ← ASP.NET Core Web API + Swagger
+│   ├── Controllers/                  → ProductosApi, VentasApi, CajaApi, ReportesApi
+│   └── Models/                       → DTOs: ApiResponse, CrearVentaRequest
+│
+└── LocalManager.xUnit/               ← Pruebas automatizadas (xUnit)
+    ├── CategoriasControllerTests.cs  → CategoriasController + fake de ICategoriaService
+    ├── ClientesControllerTests.cs    → ClientesController + fake de IClienteService
+    └── CajaControllerTests.cs        → CajaController + fake de ICajaService
 ```
 
 ### Regla de Dependencia
@@ -42,9 +47,11 @@ Api → Application → Domain
 Presentation → Application → Domain
       ↓            ↓
 Infrastructure ←──┘
+
+LocalManager.xUnit → Presentation → Application → Domain
 ```
 
-`Domain` no conoce `Infrastructure`, `Presentation` ni `Api`. El compilador lo garantiza.
+`Domain` no conoce `Infrastructure`, `Presentation`, `Api` ni `LocalManager.xUnit`. El compilador lo garantiza.
 
 ---
 
@@ -76,6 +83,8 @@ Los repositorios reciben `IDbContext`, nunca la implementación concreta.
 
 > ⚠️ **Deuda técnica conocida:** en `Program.cs` (Presentation y Api), las dos ramas del `if (usarJson)` registran actualmente `JsonDbContext` — la bandera `UseJsonPersistence` todavía no selecciona una estrategia distinta porque `SqlDbContext` no está implementado. Además, `LocalManager.Api/appsettings.json` apunta `JsonDatabase:DataPath` a una ruta absoluta de la máquina del autor en vez de una ruta relativa o variable de entorno. Ver **ADR-06** para el detalle y la propuesta de solución.
 
+Este mismo desacoplamiento (controladores de `Presentation` dependiendo solo de interfaces de `Application`) es lo que permite probar los controladores en `LocalManager.xUnit` con fakes en memoria, sin necesitar `Infrastructure` ni una base de datos real. Ver **ADR-07**.
+
 ---
 
 ## Tecnologías
@@ -89,6 +98,8 @@ Los repositorios reciben `IDbContext`, nunca la implementación concreta.
 | ORM | Entity Framework Core 8 (preparado) |
 | Documentación API | Swagger / OpenAPI 3.0 |
 | Frontend MVC | Razor + Bootstrap 5 |
+| Pruebas | xUnit 2.9.3 + coverlet |
+| CI/CD | GitHub Actions |
 
 ---
 
@@ -155,6 +166,28 @@ dotnet run --project LocalManager.Api
 
 ---
 
+## Pruebas Automatizadas y CI/CD
+
+El proyecto `LocalManager.xUnit` contiene pruebas unitarias (Arrange-Act-Assert) para tres controladores de la capa `Presentation`, usando fakes en memoria que implementan directamente las interfaces de `Application`:
+
+| Controlador probado | Interfaz mockeada (fake) | Qué valida |
+|----------------------|---------------------------|------------|
+| `CategoriasController` | `ICategoriaService` | Listado, creación y manejo de ID inexistente |
+| `ClientesController` | `IClienteService` | Listado, edición y eliminación |
+| `CajaController` | `ICajaService` | Listado, apertura de turno y manejo de ID inexistente |
+
+Ejecutar localmente:
+
+```bash
+dotnet test LocalManager.xUnit/LocalManager.xUnit.csproj
+```
+
+El pipeline `.github/workflows/ci.yml` ejecuta automáticamente `dotnet restore`, `dotnet build` y `dotnet test` sobre la solución en cada `push` y `pull request`, evitando que una regresión en estos controladores llegue a `main` sin ser detectada.
+
+Ver el razonamiento completo (por qué se eligieron estos controladores y qué queda pendiente de cubrir) en [`ADRs/ADR-07-Jesús-Uc.md`](./ADRs/ADR-07-Jesús-Uc.md).
+
+---
+
 ## Transacciones Atómicas
 
 Las ventas siguen un flujo pensado para comportarse como el principio **ACID**:
@@ -212,7 +245,8 @@ Ver el detalle completo (qué es, por qué existe, costo de no pagarla y propues
 | ADR-03 | Estilo arquitectónico: Clean Architecture en capas | `Actualizado por el ADR-04` |
 | ADR-04 | Incorporación de API REST con Swagger | `Actualizado por el ADR-05` |
 | ADR-05 | Patrones GOF: Repository (Estructural) + Strategy (Comportamiento) | `Actualizado por el ADR-06` |
-| ADR-06 | Deuda técnica identificada: configuración hardcodeada y falsa atomicidad en ventas | `APROBADO` |
+| ADR-06 | Deuda técnica identificada: configuración hardcodeada y falsa atomicidad en ventas | `Actualizado por el ADR-07` |
+| ADR-07 | Suite de pruebas xUnit y pipeline de Integración Continua | `APROBADO` |
 
 ---
 
@@ -232,5 +266,6 @@ Este documento fue redactado de forma personal. Se utilizó inteligencia artific
 | **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas, listas y bloques de código. |
 | **Estructuración de diagramas** | Se usó IA como apoyo para organizar la representación visual de la arquitectura. |
 | **Actualización con deuda técnica (ADR-06)** | Se usó IA para redactar las notas de deuda técnica añadidas a este README y enlazarlas con el ADR-06, a partir de la inspección de código realizada previamente. |
+| **Actualización con pruebas y CI/CD (ADR-07)** | Se usó IA para diseñar la suite de pruebas de `LocalManager.xUnit`, redactar el pipeline `ci.yml` y documentar en este README la sección de Pruebas Automatizadas y CI/CD, enlazándola con el ADR-07. |
 
 > **Nota:** El análisis de contexto, la toma de decisiones arquitectónicas y la redacción del razonamiento son de autoría propia. La IA no generó contenido de fondo de este README de forma autónoma.
