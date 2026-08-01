@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using LocalManager.Application.Services;
 using LocalManager.Domain.Interfaces.Repositories;
 using LocalManager.Infrastructure.Data;
@@ -30,11 +31,10 @@ if (usarJson)
 }
 else
 {
-    // Descomentar cuando se implemente SqlDbContext:
-    // builder.Services.AddScoped<IDbContext, SqlDbContext>();
-    // Por ahora, si UseJsonPersistence = false, cae en JSON como fallback
-    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
-        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+    // PATRÓN STRATEGY: SqlDbContext (PostgreSQL con EF Core / Npgsql)
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Services.AddScoped<IDbContext, SqlDbContext>();
 }
 
 // ─── PATRÓN REPOSITORY: Repositorios reciben IDbContext (no JsonDbContext) ───

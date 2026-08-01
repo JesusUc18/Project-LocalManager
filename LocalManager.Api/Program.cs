@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using System.Reflection;
 using LocalManager.Application.Services;
 using LocalManager.Domain.Interfaces.Repositories;
 using LocalManager.Infrastructure.Data;
 using LocalManager.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 // =============================================================================
 // ADR-04: Incorporación de API REST
@@ -48,10 +49,10 @@ if (usarJson)
 }
 else
 {
-    // Descomentar cuando se implemente SqlDbContext:
-    // builder.Services.AddScoped<IDbContext, SqlDbContext>();
-    builder.Services.AddSingleton<IDbContext, JsonDbContext>(provider =>
-        new JsonDbContext(builder.Configuration.GetValue<string>("JsonDatabase:DataPath") ?? "Data"));
+    // PATRÓN STRATEGY: SqlDbContext (PostgreSQL con EF Core / Npgsql)
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    builder.Services.AddScoped<IDbContext, SqlDbContext>();
 }
 
 // ─── PATRÓN REPOSITORY: Repositorios reciben IDbContext ───
