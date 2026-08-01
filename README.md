@@ -1,8 +1,8 @@
 # Local Manager — Sistema de Gestión para Negocios Locales
 
-> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Última actualización:** 22/07/2026
+> **Estado:** `APROBADO` | **Autor:** Jesús Uc | **Última actualización:** 01/08/2026
 
-Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes. Cuenta además con una suite de pruebas automatizadas con **xUnit** y un pipeline de **Integración Continua** en GitHub Actions.
+Sistema de gestión de negocios locales con **Clean Architecture + Patrones GOF + API REST**. Permite controlar ventas, inventario, clientes y caja desde cualquier navegador, con una API documentada con Swagger/OpenAPI para consumo por múltiples clientes. Cuenta además con una suite de pruebas automatizadas con **xUnit**, un pipeline de **Integración Continua** en GitHub Actions, y persiste sus datos en **PostgreSQL**.
 
 ---
 
@@ -21,14 +21,15 @@ LocalManager/
 ├── LocalManager.Infrastructure/      ← Persistencia (solo Domain)
 │   ├── Data/
 │   │   ├── IDbContext.cs             → Interfaz Strategy (patrón GOF)
-│   │   ├── JsonDbContext.cs          → Estrategia JSON (actual)
-│   │   └── AppDbContext.cs           → Estrategia SQL Server (preparado)
+│   │   ├── JsonDbContext.cs          → Estrategia JSON (respaldo)
+│   │   ├── AppDbContext.cs           → DbContext de EF Core (Npgsql / PostgreSQL)
+│   │   └── SqlDbContext.cs           → Estrategia SQL (activa) — envuelve AppDbContext
 │   └── Repositories/                 → Implementaciones Repository (patrón GOF)
 │
 ├── LocalManager.Presentation/        ← ASP.NET Core MVC
 │   ├── Controllers/
 │   ├── Views/
-│   └── Data/                         → Archivos JSON compartidos (fuente única de datos)
+│   └── Data/                         → Archivos JSON (solo si UseJsonPersistence = true)
 │
 ├── LocalManager.Api/                 ← ASP.NET Core Web API + Swagger
 │   ├── Controllers/                  → ProductosApi, VentasApi, CajaApi, ReportesApi
@@ -70,18 +71,18 @@ Application:    VentaService(IVentaRepository, IProductoRepository) ← solo int
 El mecanismo de persistencia es intercambiable sin modificar repositorios, servicios ni controladores. Se controla con una sola línea en `appsettings.json`:
 
 ```json
-"UseJsonPersistence": true   ← JSON (desarrollo)
-"UseJsonPersistence": false  ← SQL Server (producción)
+"UseJsonPersistence": true    ← JSON (respaldo, sin base de datos)
+"UseJsonPersistence": false   ← PostgreSQL vía EF Core / Npgsql (activo)
 ```
 
 ```
-IDbContext ←── JsonDbContext   (actual)
-IDbContext ←── SqlDbContext    (futuro)
+IDbContext ←── JsonDbContext   (estrategia JSON)
+IDbContext ←── SqlDbContext    (estrategia PostgreSQL, usa AppDbContext internamente)
 ```
 
 Los repositorios reciben `IDbContext`, nunca la implementación concreta.
 
-> ⚠️ **Deuda técnica conocida:** en `Program.cs` (Presentation y Api), las dos ramas del `if (usarJson)` registran actualmente `JsonDbContext` — la bandera `UseJsonPersistence` todavía no selecciona una estrategia distinta porque `SqlDbContext` no está implementado. Además, `LocalManager.Api/appsettings.json` apunta `JsonDatabase:DataPath` a una ruta absoluta de la máquina del autor en vez de una ruta relativa o variable de entorno. Ver **ADR-06** para el detalle y la propuesta de solución.
+> ✅ **Deuda técnica pagada (ADR-08):** la Deuda técnica 1 del ADR-06 quedó resuelta — `SqlDbContext` ya está implementado, la bandera `UseJsonPersistence` selecciona una estrategia real, y las rutas absolutas de máquina local en `appsettings.json` se reemplazaron por `ConnectionStrings:DefaultConnection`.
 
 Este mismo desacoplamiento (controladores de `Presentation` dependiendo solo de interfaces de `Application`) es lo que permite probar los controladores en `LocalManager.xUnit` con fakes en memoria, sin necesitar `Infrastructure` ni una base de datos real. Ver **ADR-07**.
 
@@ -94,8 +95,8 @@ Este mismo desacoplamiento (controladores de `Presentation` dependiendo solo de 
 | Framework | ASP.NET Core 8 |
 | Patrón arquitectónico | MVC + Clean Architecture |
 | Patrones de diseño | Repository (GOF Estructural) + Strategy (GOF Comportamiento) |
-| Base de datos | JSON (temporal) / SQL Server (preparado) |
-| ORM | Entity Framework Core 8 (preparado) |
+| Base de datos | **PostgreSQL** (activo) / JSON (respaldo) |
+| ORM | Entity Framework Core 8 + Npgsql |
 | Documentación API | Swagger / OpenAPI 3.0 |
 | Frontend MVC | Razor + Bootstrap 5 |
 | Pruebas | xUnit 2.9.3 + coverlet |
@@ -166,6 +167,24 @@ dotnet run --project LocalManager.Api
 
 ---
 
+## Persistencia con PostgreSQL
+
+Desde el **ADR-08**, la estrategia activa de persistencia (patrón Strategy, ADR-05) es **PostgreSQL** vía Entity Framework Core / Npgsql.
+
+1. Crear la base de datos en pgAdmin (o el gestor de tu preferencia).
+2. Configurar `ConnectionStrings:DefaultConnection` en `appsettings.json` de `Presentation` y `Api`.
+3. Generar y aplicar las migraciones:
+   ```bash
+   cd LocalManager.Infrastructure
+   dotnet ef migrations add InicialPostgres --startup-project ../LocalManager.Presentation --output-dir Data/Migrations
+   dotnet ef database update --startup-project ../LocalManager.Presentation
+   ```
+4. **Domain y Application no cambian** — la regla de dependencia se respeta; solo se sustituyó el proveedor de EF Core en `Infrastructure`.
+
+Para volver temporalmente a la estrategia JSON (sin base de datos), basta con poner `"UseJsonPersistence": true` en `appsettings.json` — sin recompilar ni modificar código.
+
+---
+
 ## Pruebas Automatizadas y CI/CD
 
 El proyecto `LocalManager.xUnit` contiene pruebas unitarias (Arrange-Act-Assert) para tres controladores de la capa `Presentation`, usando fakes en memoria que implementan directamente las interfaces de `Application`:
@@ -184,7 +203,7 @@ dotnet test LocalManager.xUnit/LocalManager.xUnit.csproj
 
 El pipeline `.github/workflows/ci.yml` ejecuta automáticamente `dotnet restore`, `dotnet build` y `dotnet test` sobre la solución en cada `push` y `pull request`, evitando que una regresión en estos controladores llegue a `main` sin ser detectada.
 
-Ver el razonamiento completo (por qué se eligieron estos controladores y qué queda pendiente de cubrir) en [`ADRs/ADR-07-Jesús-Uc.md`](./ADRs/ADR_07-Jesús-Uc.md).
+Ver el razonamiento completo (por qué se eligieron estos controladores y qué queda pendiente de cubrir) en [`ADRs/ADR_07-Jesús-Uc.md`](./ADRs/ADR_07-Jesús-Uc.md).
 
 ---
 
@@ -197,7 +216,27 @@ Las ventas siguen un flujo pensado para comportarse como el principio **ACID**:
 3. **Persistencia** — Cada paso se guarda a medida que ocurre
 4. **Rollback** — Si algo falla dentro del método, se revierte manualmente el stock ya descontado
 
-> ⚠️ **Deuda técnica conocida:** esta atomicidad es actualmente *simulada en memoria*, no una transacción real de base de datos — con `JsonDbContext`, cada operación escribe a disco de inmediato, por lo que una interrupción a mitad del proceso puede dejar los archivos JSON inconsistentes. El rollback manual no cubre ese caso. Ver **ADR-06** para el detalle y la propuesta de solución (Unit of Work / transacción real con `SqlDbContext`).
+> ⚠️ **Deuda técnica conocida:** esta atomicidad sigue siendo *simulada en memoria* (Deuda técnica 2 del ADR-06). Con la migración a PostgreSQL (ADR-08) ya existe el motor capaz de resolverlo con una transacción real (`Database.BeginTransaction()`), pero `VentaService.Registrar` todavía no la usa. Este riesgo se analiza formalmente en la [Evaluación ATAM](./ATAM/Evaluacion-ATAM-Jesús-Uc.md).
+
+---
+
+## Diagramas C4 (Niveles 1 a 3)
+
+| Nivel | Diagrama | Descripción |
+|-------|----------|--------------|
+| 1 — Contexto | [`DiagramaC1-LocalManager.md`](./Diagramas/DiagramaC1-LocalManager.md) | El sistema como una caja, sus actores |
+| 2 — Contenedores | [`DiagramaC2-LocalManager.md`](./Diagramas/DiagramaC2-LocalManager.md) | Los 5 proyectos de la solución + PostgreSQL |
+| 3 — Componentes | [`DiagramaC3-LM-Domain.md`](./Diagramas/DiagramaC3-LM-Domain.md) | Entidades e interfaces `Repository` |
+| 3 — Componentes | [`DiagramaC3-LM-Application.md`](./Diagramas/DiagramaC3-LM-Application.md) | Servicios de negocio |
+| 3 — Componentes | [`DiagramaC3-LM-Infrastructure.md`](./Diagramas/DiagramaC3-LM-Infrastructure.md) | `SqlDbContext`, `JsonDbContext` y repositorios |
+| 3 — Componentes | [`DiagramaC3-LM-Presentation.md`](./Diagramas/DiagramaC3-LM-Presentation.md) | Controllers y Views MVC |
+| 3 — Componentes | [`DiagramaC3-LM-Api.md`](./Diagramas/DiagramaC3-LM-Api.md) | Controllers REST y DTOs |
+
+---
+
+## Evaluación ATAM
+
+Se realizó un análisis de **riesgo**, **trade-off** y **punto de sensibilidad** sobre decisiones arquitectónicas reales del proyecto (la transacción simulada de ventas, la elección de PostgreSQL sobre SQL Server, y la interfaz `IDbContext` del patrón Strategy). Ver el detalle completo en [`ATAM/Evaluacion-ATAM-Jesús-Uc.md`](./ATAM/Evaluacion-ATAM-Jesús-Uc.md).
 
 ---
 
@@ -229,8 +268,8 @@ Siguiendo la misma disciplina de documentación del resto del proyecto, la deuda
 
 | # | Deuda | Categoría | Estado |
 |---|-------|-----------|--------|
-| 1 | Ruta absoluta de máquina local en `appsettings.json` de `LocalManager.Api` + bandera `UseJsonPersistence` sin efecto real | Configuración / Infraestructura | Pendiente de pago |
-| 2 | "Transacción atómica" de `VentaService.Registrar` simulada en memoria, sin garantía real ante interrupciones (cada `SaveChanges()` escribe a disco de inmediato) | Lógica de negocio | Pendiente de pago |
+| 1 | Ruta absoluta de máquina local en `appsettings.json` de `LocalManager.Api` + bandera `UseJsonPersistence` sin efecto real | Configuración / Infraestructura | ✅ Pagada — ver **ADR-08** |
+| 2 | "Transacción atómica" de `VentaService.Registrar` simulada en memoria, sin garantía real ante interrupciones (cada `SaveChanges()` escribe a disco de inmediato) | Lógica de negocio | Pendiente de pago — analizada en la [Evaluación ATAM](./ATAM/Evaluacion-ATAM-Jesús-Uc.md) |
 
 Ver el detalle completo (qué es, por qué existe, costo de no pagarla y propuesta de solución) en [`ADRs/ADR_06-Jesús-Uc.md`](./ADRs/ADR_06-Jesús-Uc.md).
 
@@ -246,7 +285,8 @@ Ver el detalle completo (qué es, por qué existe, costo de no pagarla y propues
 | ADR-04 | Incorporación de API REST con Swagger | `Actualizado por el ADR-05` |
 | ADR-05 | Patrones GOF: Repository (Estructural) + Strategy (Comportamiento) | `Actualizado por el ADR-06` |
 | ADR-06 | Deuda técnica identificada: configuración hardcodeada y falsa atomicidad en ventas | `Actualizado por el ADR-07` |
-| ADR-07 | Suite de pruebas xUnit y pipeline de Integración Continua | `APROBADO` |
+| ADR-07 | Suite de pruebas xUnit y pipeline de Integración Continua | `Actualizado por el ADR-08` |
+| ADR-08 | Migración de persistencia JSON a PostgreSQL (pago de la Deuda técnica 1) | `APROBADO` |
 
 ---
 
@@ -264,8 +304,9 @@ Este documento fue redactado de forma personal. Se utilizó inteligencia artific
 |-------------|-------------|
 | **Comparación de tecnologías y patrones** | Se consultó IA para contrastar alternativas arquitectónicas y de patrones GOF, validando que las decisiones fueran coherentes con las restricciones del proyecto. La decisión final fue tomada por el autor. |
 | **Corrección de sintaxis Markdown** | Se empleó IA para revisar la sintaxis del documento, asegurando el correcto renderizado de tablas, listas y bloques de código. |
-| **Estructuración de diagramas** | Se usó IA como apoyo para organizar la representación visual de la arquitectura. |
+| **Estructuración de diagramas** | Se usó IA como apoyo para organizar la representación visual de la arquitectura, incluyendo la actualización de los diagramas C4 tras el ADR-08. |
 | **Actualización con deuda técnica (ADR-06)** | Se usó IA para redactar las notas de deuda técnica añadidas a este README y enlazarlas con el ADR-06, a partir de la inspección de código realizada previamente. |
 | **Actualización con pruebas y CI/CD (ADR-07)** | Se usó IA para diseñar la suite de pruebas de `LocalManager.xUnit`, redactar el pipeline `ci.yml` y documentar en este README la sección de Pruebas Automatizadas y CI/CD, enlazándola con el ADR-07. |
+| **Migración a PostgreSQL (ADR-08)** | Se usó IA para implementar `SqlDbContext`, configurar EF Core/Npgsql, generar el script de datos de prueba y documentar esta sección y la de Diagramas C4 / Evaluación ATAM. |
 
 > **Nota:** El análisis de contexto, la toma de decisiones arquitectónicas y la redacción del razonamiento son de autoría propia. La IA no generó contenido de fondo de este README de forma autónoma.
