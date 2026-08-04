@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using LocalManager.Application.Services;
 using LocalManager.Domain.Interfaces.Repositories;
@@ -23,7 +26,21 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ─── Servicios MVC ───
-builder.Services.AddControllersWithViews();
+// Login simple con 2 cuentas fijas (ver AccountController) para restringir el acceso
+// mientras la app se expone en la nube (Cloudflare Tunnel) antes de tener auth real.
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AuthorizeFilter());
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+    });
 
 // ─── PATRÓN STRATEGY: Selector de estrategia de persistencia ───
 // true  → JsonDbContext  (desarrollo, sin SQL Server)
@@ -72,6 +89,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
