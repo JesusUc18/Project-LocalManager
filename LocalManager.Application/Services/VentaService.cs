@@ -42,28 +42,27 @@ namespace LocalManager.Application.Services
                     return (false, $"El producto con ID {d.ProductoId} no existe.");
                 if (producto.Stock < d.Cantidad)
                     return (false, $"Stock insuficiente para '{producto.Nombre}'. Disponible: {producto.Stock}, Solicitado: {d.Cantidad}.");
+
+                // Se fija el precio AQUÍ, antes de guardar. Así, cuando EF guarde la Venta,
+                // los Detalles (que van en la misma colección) se insertan en cascada junto
+                // con ella, en una sola operación y ya con el precio correcto.
+                d.PrecioUnitario = producto.Precio;
             }
 
             // ─── FASE 2: EJECUCIÓN ATÓMICA ───
             try
             {
-                // 1. Guardar la venta
+                // 1. Guardar la venta junto con sus detalles (EF los inserta en cascada
+                //    porque van dentro de venta.Detalles). NOTA: ya NO se vuelve a guardar
+                //    cada detalle por separado — eso era lo que causaba el error de
+                //    "llave duplicada" (insertaba cada detalle dos veces).
                 _ventaRepository.Agregar(venta);
 
-                // 2. Guardar detalles y descontar stock
+                // 2. Descontar stock de cada producto vendido
                 var productosDescontados = new List<(int productoId, int cantidad)>();
                 foreach (var d in venta.Detalles)
                 {
                     var producto = _productoRepository.ObtenerPorId(d.ProductoId);
-                    if (producto != null)
-                    {
-                        d.VentaId = venta.Id;
-                        d.PrecioUnitario = producto.Precio;
-                        d.Producto = new Producto { Id = producto.Id, Nombre = producto.Nombre };
-                        _ventaRepository.AgregarDetalle(d);
-                    }
-
-                    // Descontar stock
                     if (producto != null && producto.Stock >= d.Cantidad)
                     {
                         producto.Stock -= d.Cantidad;
