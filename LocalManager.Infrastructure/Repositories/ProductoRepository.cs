@@ -53,6 +53,7 @@ namespace LocalManager.Infrastructure.Repositories
 
         public void Actualizar(Producto producto)
         {
+            producto.Categoria = null;
             _context.Update(producto);
             _context.SaveChanges();
         }
