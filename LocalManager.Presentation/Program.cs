@@ -63,9 +63,13 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    // En producción sí forzamos HTTPS. En Development lo omitimos para poder exponer
+    // la app por HTTP a través de un túnel (Cloudflare Tunnel, ngrok, etc.) para demos,
+    // ya que ese túnel apunta al puerto HTTP local (62565) y no al HTTPS local (62564),
+    // que no es accesible desde fuera de la máquina.
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
