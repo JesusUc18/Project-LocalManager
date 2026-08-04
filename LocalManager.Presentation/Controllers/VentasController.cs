@@ -30,17 +30,27 @@ namespace LocalManager.Presentation.Controllers
 
         public IActionResult Index() => View(_ventaService.ObtenerTodas());
 
+        /// <summary>
+        /// Rellena las listas del ViewModel (productos, clientes, cajas). Se usa tanto en el
+        /// GET como cuando el POST falla, para que el formulario no pierda las opciones.
+        /// </summary>
+        private void PopularListas(VentaViewModel vm)
+        {
+            var productosDisponibles = _productoService.ObtenerTodos().Where(p => p.Activo && p.Stock > 0).ToList();
+
+            vm.Productos = productosDisponibles
+                .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = $"{p.Nombre} - ${p.Precio:F2} (Stock: {p.Stock})" }).ToList();
+            vm.ProductosData = productosDisponibles;
+            vm.Clientes = _clienteService.ObtenerTodos()
+                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Nombre }).ToList();
+            vm.CajasAbiertas = _cajaService.ObtenerAbiertas()
+                .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = $"Caja #{c.Id} - {c.FechaApertura:dd/MM/yyyy HH:mm}" }).ToList();
+        }
+
         public IActionResult Create()
         {
-            var vm = new VentaViewModel
-            {
-                Productos = _productoService.ObtenerTodos().Where(p => p.Activo && p.Stock > 0)
-                    .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = $"{p.Nombre} - ${p.Precio:F2} (Stock: {p.Stock})" }).ToList(),
-                Clientes = _clienteService.ObtenerTodos()
-                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Nombre }).ToList(),
-                CajasAbiertas = _cajaService.ObtenerAbiertas()
-                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = $"Caja #{c.Id} - {c.FechaApertura:dd/MM/yyyy HH:mm}" }).ToList()
-            };
+            var vm = new VentaViewModel();
+            PopularListas(vm);
             return View(vm);
         }
 
@@ -66,6 +76,7 @@ namespace LocalManager.Presentation.Controllers
             if (!venta.Detalles.Any())
             {
                 ModelState.AddModelError("", "Debe agregar al menos un producto a la venta.");
+                PopularListas(vm);
                 return View(vm);
             }
 
@@ -74,6 +85,7 @@ namespace LocalManager.Presentation.Controllers
                 return RedirectToAction(nameof(Index));
 
             ModelState.AddModelError("", mensaje);
+            PopularListas(vm);
             return View(vm);
         }
 

@@ -23,6 +23,12 @@ namespace LocalManager.Presentation.ViewModels
         [Display(Name = "Cajas abiertas")]
         public List<SelectListItem> CajasAbiertas { get; set; } = new();
 
+        /// <summary>
+        /// Datos completos de productos (id, nombre, precio, stock) para que la vista
+        /// pueda calcular el total en el modal de "Confirmar compra" sin ir al servidor.
+        /// </summary>
+        public List<Producto> ProductosData { get; set; } = new();
+
         public List<SelectListItem> MetodosPago { get; set; } = new()
         {
             new SelectListItem { Value = "Efectivo", Text = "Efectivo" },

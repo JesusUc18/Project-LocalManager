@@ -61,9 +61,35 @@
                     <hr />
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="/Ventas" class="btn btn-outline-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-check-lg me-1"></i>Registrar Venta</button>
+                        <button type="button" id="btnAbrirConfirmacion" class="btn btn-primary btn-lg"><i class="bi bi-check-lg me-1"></i>Registrar Venta</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Confirmar compra -->
+<div class="modal fade" id="confirmarCompraModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-receipt me-2"></i>Confirmar compra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="resumenProductos" class="list-group mb-3"></ul>
+                <div class="d-flex justify-content-between align-items-center fs-5">
+                    <strong>Total a pagar:</strong>
+                    <strong id="resumenTotal" class="text-primary">$0.00</strong>
+                </div>
+                <div id="avisoStock" class="alert alert-danger mt-3 mb-0 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Volver y editar</button>
+                <button type="button" id="btnConfirmarCompra" class="btn btn-success">
+                    <i class="bi bi-check-circle me-1"></i>Sí, confirmar y registrar
+                </button>
             </div>
         </div>
     </div>
@@ -72,6 +98,15 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        // Precio y stock disponible de cada producto, generado desde el servidor,
+        // para poder calcular el total en el navegador antes de enviar la venta.
+        const productosInfo = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            Model.ProductosData.ToDictionary(
+                p => p.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                p => new { nombre = p.Nombre, precio = p.Precio, stock = p.Stock }
+            )
+        ));
+
         document.getElementById('addProducto').addEventListener('click', function() {
             var container = document.getElementById('productosContainer');
             var row = document.querySelector('.producto-row').cloneNode(true);
@@ -91,5 +126,69 @@
             });
         }
         bindRemoveButtons();
+
+        var confirmarModal = new bootstrap.Modal(document.getElementById('confirmarCompraModal'));
+
+        document.getElementById('btnAbrirConfirmacion').addEventListener('click', function () {
+            var form = document.getElementById('ventaForm');
+
+            // Validar los campos nativos del formulario (caja, productos, cantidades, etc.)
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            var resumenLista = document.getElementById('resumenProductos');
+            var avisoStock = document.getElementById('avisoStock');
+            resumenLista.innerHTML = '';
+            avisoStock.classList.add('d-none');
+            avisoStock.innerHTML = '';
+
+            var total = 0;
+            var hayProblemaStock = false;
+            var problemas = [];
+
+            document.querySelectorAll('.producto-row').forEach(function (row) {
+                var select = row.querySelector('select[name="productoIds"]');
+                var cantidadInput = row.querySelector('input[name="cantidades"]');
+                var productoId = select.value;
+                var cantidad = parseInt(cantidadInput.value, 10) || 0;
+
+                if (!productoId || cantidad <= 0) return;
+
+                var info = productosInfo[productoId];
+                if (!info) return;
+
+                var subtotal = info.precio * cantidad;
+                total += subtotal;
+
+                if (cantidad > info.stock) {
+                    hayProblemaStock = true;
+                    problemas.push(`"${info.nombre}": solicita ${cantidad}, pero solo hay ${info.stock} en stock.`);
+                }
+
+                var li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `<span>${info.nombre} <span class="text-muted">x${cantidad}</span></span><span>$${subtotal.toFixed(2)}</span>`;
+                resumenLista.appendChild(li);
+            });
+
+            document.getElementById('resumenTotal').textContent = '$' + total.toFixed(2);
+
+            if (hayProblemaStock) {
+                avisoStock.classList.remove('d-none');
+                avisoStock.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>No se puede completar la compra:<br>' + problemas.join('<br>');
+                document.getElementById('btnConfirmarCompra').disabled = true;
+            } else {
+                document.getElementById('btnConfirmarCompra').disabled = false;
+            }
+
+            confirmarModal.show();
+        });
+
+        document.getElementById('btnConfirmarCompra').addEventListener('click', function () {
+            confirmarModal.hide();
+            document.getElementById('ventaForm').submit();
+        });
     </script>
 }
