@@ -14,6 +14,12 @@ using LocalManager.Infrastructure.Repositories;
 // sin modificar ningún repositorio, servicio ni controlador.
 // =============================================================================
 
+// Npgsql (driver de PostgreSQL) exige por defecto que los DateTime guardados en columnas
+// "timestamp with time zone" vengan en UTC. Como el proyecto usa DateTime.Now (hora local)
+// en varias entidades (Venta.Fecha, Caja.FechaApertura, etc.), se restaura el comportamiento
+// anterior de Npgsql para aceptar DateTime con Kind=Local/Unspecified sin lanzar excepción.
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ─── Servicios MVC ───
